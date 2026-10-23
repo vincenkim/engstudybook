@@ -9,7 +9,8 @@
 		readProgressFile,
 		replaceProgress,
 		setMode,
-		setRate
+		setRate,
+		setTheme
 	} from '#lib/progress/store.svelte.js';
 	import { noVoiceMessage, speech } from '#lib/speech/player.svelte.js';
 
@@ -65,6 +66,16 @@
 				]}
 				value={progress.settings.rate}
 				onChange={setRate}
+			/>
+			<SegmentedSetting
+				label="화면 테마"
+				options={[
+					['system', '시스템'],
+					['light', '밝게'],
+					['dark', '어둡게']
+				]}
+				value={progress.settings.theme ?? 'system'}
+				onChange={setTheme}
 			/>
 			<div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
 				<span class="min-w-[76px] text-sm font-bold">음성 확인</span>

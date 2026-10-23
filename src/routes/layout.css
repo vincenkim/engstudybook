@@ -2,6 +2,9 @@
 @import 'tw-animate-css';
 @import 'shadcn-svelte/tailwind.css';
 
+/* `dark:` follows the theme set on <html> (the setting, or the system's), not only the system's. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
 /* Blue accent; correct (green) and wrong (red) stay separate from it so a picked answer never reads as correct. */
 :root {
 	color-scheme: light;
@@ -31,6 +34,60 @@
 	--bad-soft: #fcebea;
 	--flag: #c2410c;
 	--mark: #dce6fb;
+	/* Word study states, from the legend of the PDF wordbook: bar, chip background, chip text. */
+	--word-unseen: #c9cfcb;
+	--word-unseen-soft: #eceeec;
+	--word-unseen-fg: #4d5550;
+	--word-new: #3e8a2c;
+	--word-new-soft: #d8eec9;
+	--word-new-fg: #24521a;
+	--word-unsure: #a9793a;
+	--word-unsure-soft: #f1e0c2;
+	--word-unsure-fg: #5c4318;
+	--word-known: #d9b300;
+	--word-known-soft: #fff2a8;
+	--word-known-fg: #4d4100;
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+	--background: #111513;
+	--foreground: #e6ebe7;
+	--card: #1a1f1c;
+	--card-foreground: #e6ebe7;
+	--popover: #1a1f1c;
+	--popover-foreground: #e6ebe7;
+	--primary: #8cb0ff;
+	--primary-foreground: #0c1a3d;
+	--secondary: #1e2a44;
+	--secondary-foreground: #c9d8ff;
+	--muted: #232925;
+	--muted-foreground: #a3ada6;
+	--accent: #1e2a44;
+	--accent-foreground: #c9d8ff;
+	--destructive: #ff8a80;
+	--border: #2e3531;
+	--input: #2e3531;
+	--ring: #8cb0ff;
+	--brand: #8cb0ff;
+	--ok: #5fd08a;
+	--ok-soft: #173524;
+	--bad: #ff8a80;
+	--bad-soft: #3d1c1a;
+	--flag: #fb923c;
+	--mark: #2b3b63;
+	--word-unseen: #59615c;
+	--word-unseen-soft: #262c28;
+	--word-unseen-fg: #c3cbc6;
+	--word-new: #6cc35a;
+	--word-new-soft: #1f3a19;
+	--word-new-fg: #b9e6a8;
+	--word-unsure: #d4a25e;
+	--word-unsure-soft: #3d2f17;
+	--word-unsure-fg: #f0d6aa;
+	--word-known: #e8c832;
+	--word-known-soft: #3a3410;
+	--word-known-fg: #f5e690;
 }
 
 @theme inline {
@@ -67,6 +124,18 @@
 	--color-bad-soft: var(--bad-soft);
 	--color-flag: var(--flag);
 	--color-mark: var(--mark);
+	--color-word-unseen: var(--word-unseen);
+	--color-word-unseen-soft: var(--word-unseen-soft);
+	--color-word-unseen-fg: var(--word-unseen-fg);
+	--color-word-new: var(--word-new);
+	--color-word-new-soft: var(--word-new-soft);
+	--color-word-new-fg: var(--word-new-fg);
+	--color-word-unsure: var(--word-unsure);
+	--color-word-unsure-soft: var(--word-unsure-soft);
+	--color-word-unsure-fg: var(--word-unsure-fg);
+	--color-word-known: var(--word-known);
+	--color-word-known-soft: var(--word-known-soft);
+	--color-word-known-fg: var(--word-known-fg);
 	--radius-sm: calc(var(--radius) * 0.6);
 	--radius-md: calc(var(--radius) * 0.8);
 	--radius-lg: var(--radius);

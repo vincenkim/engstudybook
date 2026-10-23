@@ -4,22 +4,25 @@ import { isRevealed, scoreOf } from './attempt';
 
 const modes = ['instant', 'exam'] as const;
 const rates = [0.8, 1] as const;
-
-const settingsSchema = z.object({
-	mode: z.enum(modes),
-	rate: z.literal(rates)
-});
-
-const scoreSchema = z.object({
-	correct: z.number().int().min(0),
-	total: z.number().int().min(0)
-});
+const themes = ['system', 'light', 'dark'] as const;
 
 /**
  * A field added after v2 shipped. It is optional, and a malformed value reads as missing: a record
  * failing the v2 schema would fall back to the v1 path and lose its first scores.
  */
 const addedField = <T extends z.ZodType>(schema: T) => schema.optional().catch(undefined);
+
+const settingsSchema = z.object({
+	mode: z.enum(modes),
+	rate: z.literal(rates),
+	/** Missing means 'system'. */
+	theme: addedField(z.enum(themes))
+});
+
+const scoreSchema = z.object({
+	correct: z.number().int().min(0),
+	total: z.number().int().min(0)
+});
 
 const dayV1Schema = z.object({
 	answers: z.record(z.string(), z.number().int().min(0).max(3)),
@@ -56,6 +59,7 @@ const progressV2Schema = z.object({
 
 export type Mode = (typeof modes)[number];
 export type Rate = (typeof rates)[number];
+export type Theme = (typeof themes)[number];
 export type Settings = z.infer<typeof settingsSchema>;
 export type Score = z.infer<typeof scoreSchema>;
 export type DayProgress = z.infer<typeof dayV2Schema>;

@@ -14,7 +14,8 @@ import {
 	type Mode,
 	type Progress,
 	type QuestionsOfDay,
-	type Rate
+	type Rate,
+	type Theme
 } from './model';
 import { pickInReview } from './review';
 
@@ -132,6 +133,11 @@ export function setMode(mode: Mode) {
 
 export function setRate(rate: Rate) {
 	progress.settings.rate = rate;
+	save();
+}
+
+export function setTheme(theme: Theme) {
+	progress.settings.theme = theme;
 	save();
 }
 

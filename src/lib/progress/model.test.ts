@@ -78,6 +78,17 @@ describe('parseProgress', () => {
 		expect(parsed?.lastDay).toBeUndefined();
 	});
 
+	it('keeps a chosen theme and reads a malformed one as missing, keeping the record v2', () => {
+		const withTheme = (theme: unknown) => ({
+			...savedV2(retrying),
+			settings: { mode: 'exam', rate: 1, theme }
+		});
+		expect(parseProgress(withTheme('dark'), questionsOfDay)?.settings.theme).toBe('dark');
+		const parsed = parseProgress(withTheme('neon'), questionsOfDay);
+		expect(parsed?.settings).toEqual({ mode: 'exam', rate: 1, theme: undefined });
+		expect(parsed?.days[2]).toMatchObject(retrying);
+	});
+
 	it('migrates a finished v1 day and keeps its first score', () => {
 		const v1 = { settings: { mode: 'instant', rate: 0.8 }, days: { 1: v1Day({ a: 0, b: 1 }) } };
 		expect(parseProgress(v1, questionsOfDay)).toEqual({

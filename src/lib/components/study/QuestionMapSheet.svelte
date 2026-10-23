@@ -36,9 +36,9 @@
 	const resultPage = $derived(pagesOf(content, dayState).length - 1);
 
 	const cellStyles: Record<QuestionState, string> = {
-		correct: 'bg-ok text-white',
-		wrong: 'bg-bad text-white',
-		answered: 'bg-muted-foreground text-white',
+		correct: 'bg-ok text-card',
+		wrong: 'bg-bad text-card',
+		answered: 'bg-muted-foreground text-card',
 		unanswered: 'bg-muted text-muted-foreground ring-1 ring-border ring-inset'
 	};
 	const legend: QuestionState[] = ['correct', 'wrong', 'answered', 'unanswered'];

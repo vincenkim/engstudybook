@@ -4,6 +4,23 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="theme-color" content="#2556c4" />
+		<script>
+			// The app renders only in the browser, so the saved theme is set here before the first paint.
+			// The bar colors match the ones +layout.svelte keeps in sync afterwards.
+			(() => {
+				let theme;
+				try {
+					theme = JSON.parse(localStorage.getItem('toeicBasic.v2'))?.settings?.theme;
+				} catch {
+					// Storage blocked or the record unreadable: follow the system.
+				}
+				const dark =
+					theme === 'dark' ||
+					(theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+				document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+				document.querySelector('meta[name="theme-color"]').content = dark ? '#111513' : '#2556c4';
+			})();
+		</script>
 		<link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest" />
 		<link rel="icon" type="image/png" href="%sveltekit.assets%/icons/icon-192.png" />
 		<link rel="apple-touch-icon" href="%sveltekit.assets%/icons/apple-touch-icon.png" />
