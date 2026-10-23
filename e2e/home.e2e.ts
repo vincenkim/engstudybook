@@ -116,7 +116,8 @@ test('offers Day 1 with nothing to review when there is no record', async ({ pag
 	await page.goto('/');
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('오늘');
 	const review = page.getByRole('region', { name: '복습', exact: true });
-	await expect(review.getByRole('definition')).toHaveText('0');
+	await expect(review.getByRole('group', { name: '틀린 문제' })).toHaveText('틀린 문제 0');
+	await expect(review.getByRole('group', { name: '복습할 단어' })).toHaveText('복습할 단어 0');
 	await page.getByRole('link', { name: 'Day 1 시작하기' }).click();
 	await expect(page).toHaveURL(/\/day\/1$/);
 	await expect(page.getByRole('button', { name: '처음부터 시작' })).toBeVisible();

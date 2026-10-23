@@ -1,3 +1,5 @@
+import { on } from 'svelte/events';
+import { createSubscriber } from 'svelte/reactivity';
 import { z } from 'zod';
 import type { WordStatus } from '#lib/content/words.js';
 import {
@@ -84,6 +86,21 @@ globalThis.addEventListener?.('storage', (event) => {
 });
 
 const today = () => localDate(new Date());
+
+const watchShown = createSubscriber((update) => {
+	const offFocus = on(window, 'focus', update);
+	const offVisible = on(document, 'visibilitychange', update);
+	return () => {
+		offFocus();
+		offVisible();
+	};
+});
+
+/** Today for due words, read again when the app shows again or takes focus (KTD6). */
+export function currentDate() {
+	watchShown();
+	return today();
+}
 
 /** A rating from a card. */
 export function rateWord(item: StudyItem, status: WordStatus) {

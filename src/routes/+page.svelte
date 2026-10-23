@@ -2,6 +2,7 @@
 	import ProgressSummary from '#lib/components/home/ProgressSummary.svelte';
 	import ResumeCard from '#lib/components/home/ResumeCard.svelte';
 	import ReviewSummary from '#lib/components/home/ReviewSummary.svelte';
+	import WordSummary from '#lib/components/home/WordSummary.svelte';
 	import SettingsSheet from '#lib/components/settings/SettingsSheet.svelte';
 
 	const today = new Date().toLocaleDateString('ko-KR', {
@@ -21,9 +22,10 @@
 		</div>
 		<SettingsSheet />
 	</header>
-	<!-- From 1024px the resume and progress cards take the wide column, review the narrow one. -->
-	<div class="mt-4 grid gap-3 lg:mt-6 lg:grid-cols-[2fr_1fr] lg:gap-4">
+	<!-- From 1024px the resume and progress cards take the wide column, words and review the narrow ones. -->
+	<div class="mt-4 grid gap-3 lg:mt-6 lg:grid-cols-[2fr_1fr_1fr] lg:gap-4">
 		<ResumeCard />
+		<WordSummary />
 		<ReviewSummary />
 		<ProgressSummary />
 	</div>

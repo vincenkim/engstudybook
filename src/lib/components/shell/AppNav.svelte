@@ -17,8 +17,11 @@
 	] as const;
 
 	const isCurrent = (routes: readonly string[]) => routes.some((route) => route === page.route.id);
-	// Solving a Day or a word list needs the whole phone screen; the rail and sidebar stay beside it.
-	const studying = $derived(isCurrent(['/day/[day]', '/words/[day]', '/words/saved']));
+	// Solving a Day, a word list or cards needs the whole phone screen; the rail and sidebar stay
+	// beside it.
+	const studying = $derived(
+		isCurrent(['/day/[day]', '/words/[day]', '/words/saved']) || page.state.cards === true
+	);
 </script>
 
 <!-- Below 768px a bottom tab bar, up to 1279px a left rail, then a sidebar (KTD12). -->
