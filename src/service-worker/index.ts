@@ -21,6 +21,11 @@ self.addEventListener('activate', (event) => {
 	);
 });
 
+// A new deployment waits while the old one serves open tabs, until the learner chooses to reload.
+self.addEventListener('message', (event) => {
+	if (event.data === 'skipWaiting') void self.skipWaiting();
+});
+
 self.addEventListener('fetch', (event) => {
 	const url = new URL(event.request.url);
 	if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;

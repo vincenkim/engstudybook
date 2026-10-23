@@ -4,6 +4,7 @@
 	import { afterNavigate } from '$app/navigation';
 	import AppNav from '#lib/components/shell/AppNav.svelte';
 	import { contentRegionId, scrollContentToTop } from '#lib/components/shell/content-region.js';
+	import UpdateNotice from '#lib/components/shell/UpdateNotice.svelte';
 	import { progress } from '#lib/progress/store.svelte.js';
 	import type { LayoutProps } from './$types';
 
@@ -29,8 +30,9 @@
 <div class="flex h-dvh flex-col md:flex-row">
 	<AppNav />
 	<!-- Layout containment makes fixed bars inside a page span the content area, not the menu. -->
-	<div class="relative min-h-0 min-w-0 flex-1 contain-layout">
-		<div id={contentRegionId} class="h-full overflow-y-auto">
+	<div class="relative flex min-h-0 min-w-0 flex-1 flex-col contain-layout">
+		<UpdateNotice />
+		<div id={contentRegionId} class="min-h-0 flex-1 overflow-y-auto">
 			{@render children()}
 		</div>
 	</div>
