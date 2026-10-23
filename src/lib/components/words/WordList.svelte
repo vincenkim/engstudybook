@@ -12,7 +12,12 @@
 	import WordListFilters, { type WordFilter } from './WordListFilters.svelte';
 	import WordRow, { type CoverMode } from './WordRow.svelte';
 
-	let { week, day, words }: { week: number; day: number; words: Word[] } = $props();
+	let {
+		week,
+		day,
+		words,
+		onCards
+	}: { week: number; day: number; words: Word[]; onCards: () => void } = $props();
 
 	const id = $props.id();
 	const modes: [CoverMode, string][] = [
@@ -125,6 +130,7 @@
 				class="min-h-12 w-full font-bold"
 				disabled={!deck}
 				aria-describedby={deck ? undefined : `${id}-empty`}
+				onclick={onCards}
 			>
 				{deck ? `카드로 외우기 · 외울 단어 ${deck}개` : '카드로 외우기'}
 			</Button>

@@ -5,7 +5,10 @@ declare global {
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
-		// interface PageState {}
+		interface PageState {
+			/** The card session is open over the screen that opened it (KTD9). */
+			cards?: true;
+		}
 		// interface Platform {}
 	}
 }

@@ -3,10 +3,14 @@
 /** What holds keyboard focus. Inputs, radios and toggle groups keep their own keys. */
 export type FocusKind = 'none' | 'button' | 'input' | 'radio' | 'toggle-group';
 
-/** The screen under the keys. A set page says which of its questions is current. */
+/**
+ * The screen under the keys. A set page says which of its questions is current; a word card says
+ * whether it shows its back.
+ */
 export type KeyPage =
 	| { kind: 'question' | 'lesson' | 'guided' | 'result' | 'start' | 'review' }
-	| { kind: 'set'; question: number; count: number };
+	| { kind: 'set'; question: number; count: number }
+	| { kind: 'card'; flipped: boolean };
 
 export interface KeyContext {
 	sheetOpen: boolean;
@@ -20,19 +24,21 @@ export interface KeyContext {
 
 /**
  * `page` turns a Day page, or moves to the next question of a review session; `question` moves
- * within a set; `pick` answers the current question with option `choice` (0–3).
+ * within a set; `pick` answers the current question with option `choice` (0–3); `rate` rates a
+ * word card 처음, 애매 or 완벽 (`choice` 0–2).
  */
 export type KeyAction =
 	| { type: 'page'; step: -1 | 1 }
 	| { type: 'question'; step: -1 | 1 }
-	| { type: 'pick'; choice: number }
-	| { type: 'play' | 'flag' | 'map' | 'closeSheet' };
+	| { type: 'pick' | 'rate'; choice: number }
+	| { type: 'play' | 'flag' | 'map' | 'closeSheet' | 'flip' };
 
 export type KeyPress = Pick<KeyboardEvent, 'code' | 'ctrlKey' | 'altKey' | 'metaKey' | 'repeat'>;
 
 const horizontalSteps: Record<string, -1 | 1> = { ArrowLeft: -1, ArrowRight: 1 };
 const verticalSteps: Record<string, -1 | 1> = { ArrowUp: -1, ArrowDown: 1 };
 const optionKey = /^(?:Digit|Numpad)([1-4])$/;
+const ratingKey = /^(?:Digit|Numpad)([1-3])$/;
 const ownKeys: FocusKind[] = ['input', 'radio', 'toggle-group'];
 
 /** The action a key press triggers, or null to leave the key to the browser. */
@@ -44,6 +50,7 @@ export function keyAction(press: KeyPress, context: KeyContext): KeyAction | nul
 	}
 
 	const { page } = context;
+	if (page.kind === 'card') return cardAction(press, context.focus, page.flipped);
 	const horizontal = horizontalSteps[press.code];
 	const option = optionKey.exec(press.code);
 	const play =
@@ -74,6 +81,16 @@ export function keyAction(press: KeyPress, context: KeyContext): KeyAction | nul
 	if (press.code === 'KeyF') return { type: 'flag' };
 	if (press.code === 'KeyG') return { type: 'map' };
 	return play;
+}
+
+/**
+ * Space turns the front over, except on a focused button, which the browser presses itself (the
+ * front is one). 1–3 rate the back wherever focus is.
+ */
+function cardAction(press: KeyPress, focus: FocusKind, flipped: boolean): KeyAction | null {
+	if (!flipped) return press.code === 'Space' && focus !== 'button' ? { type: 'flip' } : null;
+	const rating = ratingKey.exec(press.code);
+	return rating ? { type: 'rate', choice: Number(rating[1]) - 1 } : null;
 }
 
 function inSet(page: { count: number }, question: number) {

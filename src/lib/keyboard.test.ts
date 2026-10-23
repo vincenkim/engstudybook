@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { keyAction, type KeyContext, type KeyPress } from './keyboard';
+import { keyAction, type FocusKind, type KeyContext, type KeyPress } from './keyboard';
 
 const press = (code: string, init: Partial<KeyPress> & { key?: string } = {}) => ({
 	code,
@@ -22,6 +22,12 @@ const setPage = (question: number, sideBySide: boolean): KeyContext => ({
 	...questionPage,
 	page: { kind: 'set', question, count: 3 },
 	sideBySide
+});
+
+const cardPage = (flipped: boolean, focus: FocusKind = 'none'): KeyContext => ({
+	...questionPage,
+	focus,
+	page: { kind: 'card', flipped }
 });
 
 describe('keyAction', () => {
@@ -79,5 +85,39 @@ describe('keyAction', () => {
 	it('has no flag on lesson pages or in a review session', () => {
 		expect(keyAction(press('KeyF'), { ...questionPage, page: { kind: 'lesson' } })).toBeNull();
 		expect(keyAction(press('KeyF'), { ...questionPage, page: { kind: 'review' } })).toBeNull();
+	});
+});
+
+describe('keyAction on a word card (KTD11)', () => {
+	it('flips the front with Space unless a button has focus, which flips it itself', () => {
+		expect(keyAction(press('Space'), cardPage(false))).toEqual({ type: 'flip' });
+		expect(keyAction(press('Space'), cardPage(false, 'button'))).toBeNull();
+		expect(keyAction(press('Space'), cardPage(true))).toBeNull();
+	});
+
+	it('rates the back with 1–3 wherever focus is and ignores 4', () => {
+		expect(keyAction(press('Digit1'), cardPage(true))).toEqual({ type: 'rate', choice: 0 });
+		expect(keyAction(press('Digit2'), cardPage(true, 'button'))).toEqual({
+			type: 'rate',
+			choice: 1
+		});
+		expect(keyAction(press('Numpad3'), cardPage(true))).toEqual({ type: 'rate', choice: 2 });
+		expect(keyAction(press('Digit4'), cardPage(true))).toBeNull();
+	});
+
+	it('does not rate the front', () => {
+		expect(keyAction(press('Digit1'), cardPage(false))).toBeNull();
+	});
+
+	it('leaves the rating keys to inputs and toggle groups', () => {
+		for (const focus of ['input', 'toggle-group'] as const) {
+			expect(keyAction(press('Digit1'), cardPage(true, focus))).toBeNull();
+		}
+	});
+
+	it('has no page, flag or map keys', () => {
+		for (const code of ['ArrowRight', 'KeyF', 'KeyG']) {
+			expect(keyAction(press(code), cardPage(true))).toBeNull();
+		}
 	});
 });
