@@ -42,7 +42,7 @@ async function openAllPhases(page: Page) {
 test('shows the main menu for the screen size', async ({ page }, testInfo) => {
 	await page.goto('/');
 	const links = menu(page).getByRole('link');
-	await expect(links).toHaveText(['오늘', '문제집', '복습']);
+	await expect(links).toHaveText(['오늘', '문제집', '단어장', '복습']);
 	await expect(links.first()).toHaveAttribute('aria-current', 'page');
 
 	const viewport = page.viewportSize()!;
@@ -73,9 +73,9 @@ test('hides the tab bar while solving a Day on a phone only', async ({ page }, t
 	}
 });
 
-test('opens the workbook and review pages from the menu', async ({ page }) => {
+test('opens the workbook, wordbook and review pages from the menu', async ({ page }) => {
 	await page.goto('/');
-	for (const name of ['문제집', '복습']) {
+	for (const name of ['문제집', '단어장', '복습']) {
 		await menu(page).getByRole('link', { name }).click();
 		await expect(page.getByRole('heading', { level: 1 })).toHaveText(name);
 		await expect(page.locator('main')).toHaveCount(1);

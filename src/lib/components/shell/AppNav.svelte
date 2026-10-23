@@ -1,19 +1,24 @@
 <script lang="ts">
-	import { BookOpen, House, RotateCcw } from '@lucide/svelte';
+	import { BookOpen, Copy, House, RotateCcw } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { cn } from '#lib/utils.js';
 
-	// The wordbook tab stays hidden until phase 2.
 	const tabs = [
 		{ path: '/', label: '오늘', icon: House, routes: ['/'] },
 		{ path: '/days', label: '문제집', icon: BookOpen, routes: ['/days', '/day/[day]'] },
+		{
+			path: '/words',
+			label: '단어장',
+			icon: Copy,
+			routes: ['/words', '/words/[day]', '/words/saved']
+		},
 		{ path: '/review', label: '복습', icon: RotateCcw, routes: ['/review'] }
 	] as const;
 
 	const isCurrent = (routes: readonly string[]) => routes.some((route) => route === page.route.id);
-	// Solving a Day needs the whole phone screen; the rail and sidebar stay beside it.
-	const studying = $derived(page.route.id === '/day/[day]');
+	// Solving a Day or a word list needs the whole phone screen; the rail and sidebar stay beside it.
+	const studying = $derived(isCurrent(['/day/[day]', '/words/[day]', '/words/saved']));
 </script>
 
 <!-- Below 768px a bottom tab bar, up to 1279px a left rail, then a sidebar (KTD12). -->
