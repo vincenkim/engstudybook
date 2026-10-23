@@ -354,7 +354,7 @@ export default [
 		no: 32,
 		word: 'massive',
 		ipa: '[mǽsiv]',
-		groups: [{ pos: '형', senses: [{ text: '대규모의' }, { text: '걷대한' }, { text: '강력한' }] }],
+		groups: [{ pos: '형', senses: [{ text: '대규모의' }, { text: '거대한' }, { text: '강력한' }] }],
 		initial: 'unsure'
 	},
 	{

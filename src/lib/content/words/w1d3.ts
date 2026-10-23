@@ -368,7 +368,7 @@ export default [
 		groups: [
 			{
 				pos: '타',
-				senses: [{ text: '(사람, 물건을) 두다' }, { text: '배치하다 (in plcae of:~을 대신하여)' }]
+				senses: [{ text: '(사람, 물건을) 두다' }, { text: '배치하다 (in place of:~을 대신하여)' }]
 			}
 		],
 		initial: 'unsure'
@@ -406,7 +406,8 @@ export default [
 		word: 'refrain',
 		ipa: '[rifréin]',
 		groups: [
-			{ pos: '자', senses: [{ text: '그만두다' }, { text: '삼가다(from)' }, { text: '후렴' }] }
+			{ pos: '자', senses: [{ text: '그만두다' }, { text: '삼가다(from)' }] },
+			{ pos: '명', senses: [{ text: '후렴' }] }
 		],
 		initial: 'unsure'
 	},

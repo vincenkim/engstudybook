@@ -85,7 +85,7 @@ export default [
 		word: 'deserve',
 		ipa: '[dizə́ːrv]',
 		groups: [
-			{ pos: '타', senses: [{ text: '~할 만한 가치다 있다 (deserve + 명/ deserve + to R)' }] }
+			{ pos: '타', senses: [{ text: '~할 만한 가치가 있다 (deserve + 명/ deserve + to R)' }] }
 		],
 		initial: 'unsure'
 	},
@@ -377,7 +377,7 @@ export default [
 		word: 'pursue',
 		ipa: '[pərsúː]',
 		groups: [
-			{ pos: '타', senses: [{ text: '추구하다' }, { text: '추적하다' }, { text: '뒤쫒다' }] }
+			{ pos: '타', senses: [{ text: '추구하다' }, { text: '추적하다' }, { text: '뒤쫓다' }] }
 		],
 		initial: 'unsure'
 	},

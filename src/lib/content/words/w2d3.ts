@@ -252,7 +252,7 @@ export default [
 		groups: [
 			{
 				pos: '명',
-				senses: [{ text: '악기' }, { text: '도구' }, { text: '가구' }, { text: '기계' }]
+				senses: [{ text: '악기' }, { text: '도구' }, { text: '기구' }, { text: '기계' }]
 			}
 		],
 		initial: 'new'

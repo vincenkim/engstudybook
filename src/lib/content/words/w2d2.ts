@@ -157,10 +157,7 @@ export default [
 		no: 16,
 		word: 'customize',
 		ipa: '[kΛstəmàiz]',
-		groups: [
-			{ pos: '타', senses: [{ text: '고객의 주문대로 만들다' }] },
-			{ pos: '명', senses: [{ text: '맞춤' }, { text: '주문식' }] }
-		],
+		groups: [{ pos: '타', senses: [{ text: '고객의 주문대로 만들다' }] }],
 		initial: 'known'
 	},
 	{
@@ -455,7 +452,7 @@ export default [
 		word: 'vacuum',
 		ipa: '[vǽkjuəm]',
 		groups: [
-			{ pos: '자', senses: [{ text: '~을 진공청소기로 청소하다(up, out)' }] },
+			{ pos: '타', senses: [{ text: '~을 진공청소기로 청소하다(up, out)' }] },
 			{ pos: '명', senses: [{ text: '진공' }, { text: '공백' }] }
 		],
 		initial: 'unsure'

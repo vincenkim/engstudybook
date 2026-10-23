@@ -260,7 +260,7 @@ export default [
 		ipa: '[níərli]',
 		groups: [
 			{
-				pos: '명',
+				pos: '부',
 				senses: [{ text: '거의' }, { text: '대략' }, { text: '하마터면' }, { text: '가까이' }]
 			}
 		],

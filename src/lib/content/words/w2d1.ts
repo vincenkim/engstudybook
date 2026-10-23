@@ -145,7 +145,7 @@ export default [
 		ipa: '[diːl]',
 		groups: [
 			{ pos: '명', senses: [{ text: '거래' }, { text: '협정' }, { text: '수량' }] },
-			{ pos: '명', senses: [{ text: '다루다' }, { text: '처리하다(with)' }] }
+			{ pos: '자', senses: [{ text: '다루다' }, { text: '처리하다(with)' }] }
 		],
 		initial: 'known'
 	},
@@ -166,7 +166,7 @@ export default [
 		word: 'diminish',
 		ipa: '[dimíniʃ]',
 		groups: [
-			{ pos: '자', senses: [{ text: '감소하다' }, { text: '줄어들아' }] },
+			{ pos: '자', senses: [{ text: '감소하다' }, { text: '줄어들다' }] },
 			{ pos: '타', senses: [{ text: '줄이다' }] }
 		],
 		initial: 'unsure'
@@ -177,8 +177,10 @@ export default [
 		word: 'embark',
 		ipa: '[imbάːrk]',
 		groups: [
-			{ pos: '자', senses: [{ text: '승선하다' }, { text: '탑승하다' }] },
-			{ pos: '타', senses: [{ text: '착수(종사)하다' }] }
+			{
+				pos: '자',
+				senses: [{ text: '승선하다' }, { text: '탑승하다' }, { text: '착수(종사)하다(on)' }]
+			}
 		],
 		initial: 'new'
 	},
@@ -302,7 +304,7 @@ export default [
 		no: 31,
 		word: 'mutually',
 		ipa: '[mjúːʧuəli]',
-		groups: [{ pos: '형', senses: [{ text: '서로' }, { text: '상호간에' }, { text: '합의하여' }] }],
+		groups: [{ pos: '부', senses: [{ text: '서로' }, { text: '상호간에' }, { text: '합의하여' }] }],
 		initial: 'new'
 	},
 	{

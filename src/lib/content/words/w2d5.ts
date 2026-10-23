@@ -39,7 +39,7 @@ export default [
 		no: 4,
 		word: 'allegedly',
 		ipa: '[əlédʒidli]',
-		groups: [{ pos: '부', senses: [{ text: '주장에 의하면' }, { text: '전해는 바에 의하면' }] }],
+		groups: [{ pos: '부', senses: [{ text: '주장에 의하면' }, { text: '전해지는 바에 의하면' }] }],
 		initial: 'new'
 	},
 	{
@@ -258,7 +258,7 @@ export default [
 		ipa: '[læg]',
 		groups: [
 			{ pos: '명', senses: [{ text: '지연' }, { text: '지체' }, { text: '처짐' }] },
-			{ pos: '자', senses: [{ text: '쳐지다' }, { text: '뒤떨어지다 (behind)' }] }
+			{ pos: '자', senses: [{ text: '처지다' }, { text: '뒤떨어지다 (behind)' }] }
 		],
 		initial: 'unsure'
 	},

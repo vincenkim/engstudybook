@@ -479,7 +479,7 @@ export default [
 		no: 51,
 		word: 'temporary',
 		ipa: '[témpərèri]',
-		groups: [{ pos: '부', senses: [{ text: '일시적인' }, { text: '임시로' }] }],
+		groups: [{ pos: '형', senses: [{ text: '일시적인' }, { text: '임시의' }] }],
 		initial: 'known'
 	}
 ] satisfies WordDay;

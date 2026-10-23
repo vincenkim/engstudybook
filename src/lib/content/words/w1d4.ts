@@ -69,10 +69,7 @@ export default [
 		no: 8,
 		word: 'capital',
 		ipa: '[kǽpətl]',
-		groups: [
-			{ pos: '타', senses: [{ text: '빌려주다' }] },
-			{ pos: '명', senses: [{ text: '수도' }, { text: '자본' }, { text: '자금' }] }
-		],
+		groups: [{ pos: '명', senses: [{ text: '수도' }, { text: '자본' }, { text: '자금' }] }],
 		initial: 'unsure'
 	},
 	{
@@ -425,7 +422,10 @@ export default [
 		no: 45,
 		word: 'subsidiary',
 		ipa: '[səbsídièri]',
-		groups: [{ pos: '명', senses: [{ text: '자회사' }, { text: '보조(금)의' }] }],
+		groups: [
+			{ pos: '명', senses: [{ text: '자회사' }] },
+			{ pos: '형', senses: [{ text: '보조(금)의' }] }
+		],
 		initial: 'new'
 	},
 	{

@@ -247,7 +247,7 @@ export default [
 		no: 26,
 		word: 'hesitate',
 		ipa: '[hézətèit]',
-		groups: [{ pos: '타', senses: [{ text: '망설이다' }, { text: '주저하다 (to R)' }] }],
+		groups: [{ pos: '자', senses: [{ text: '망설이다' }, { text: '주저하다 (to R)' }] }],
 		initial: 'unsure'
 	},
 	{

@@ -15,7 +15,7 @@ export default [
 		word: 'agenda',
 		ipa: '[ədʒéndə]',
 		groups: [
-			{ pos: '명', senses: [{ text: '의사결정' }, { text: '협의사항' }, { text: '안건 (on)' }] }
+			{ pos: '명', senses: [{ text: '의사일정' }, { text: '협의사항' }, { text: '안건 (on)' }] }
 		],
 		initial: 'unsure'
 	},
@@ -40,7 +40,7 @@ export default [
 		no: 5,
 		word: 'automate',
 		ipa: '[ɔ́ːtəmèit]',
-		groups: [{ pos: '명', senses: [{ text: '자동화하다' }] }],
+		groups: [{ pos: '타', senses: [{ text: '자동화하다' }] }],
 		initial: 'unsure'
 	},
 	{
@@ -350,7 +350,7 @@ export default [
 		groups: [
 			{
 				pos: '명',
-				senses: [{ text: '샤기' }, { text: '의욕' }, { text: '윤리' }, { text: '도덕' }]
+				senses: [{ text: '사기' }, { text: '의욕' }, { text: '윤리' }, { text: '도덕' }]
 			}
 		],
 		initial: 'new'

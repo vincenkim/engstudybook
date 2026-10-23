@@ -394,7 +394,7 @@ export default [
 		groups: [
 			{
 				pos: '형',
-				senses: [{ text: '신뢰할 만한' }, { text: '믿을 수 었는' }, { text: '의지가 되는' }]
+				senses: [{ text: '신뢰할 만한' }, { text: '믿을 수 있는' }, { text: '의지가 되는' }]
 			}
 		],
 		initial: 'unsure'
@@ -429,7 +429,7 @@ export default [
 		ipa: '[rizΛlt]',
 		groups: [
 			{ pos: '명', senses: [{ text: '결과' }, { text: '성과' }] },
-			{ pos: '자', senses: [{ text: '초래하다( in)' }, { text: '~의 원인이 되다(from)' }] }
+			{ pos: '자', senses: [{ text: '초래하다(in)' }, { text: '~에서 기인하다(from)' }] }
 		],
 		initial: 'known'
 	},
@@ -500,7 +500,7 @@ export default [
 		no: 51,
 		word: 'temporary',
 		ipa: '[témpərèri]',
-		groups: [{ pos: '부', senses: [{ text: '일시적인' }, { text: '임시로' }] }],
+		groups: [{ pos: '형', senses: [{ text: '일시적인' }, { text: '임시의' }] }],
 		initial: 'known',
 		same: 'w3d2-51'
 	}
