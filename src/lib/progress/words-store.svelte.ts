@@ -7,6 +7,7 @@ import {
 	nextStatus,
 	normalizeEnglish,
 	rated,
+	savedItem,
 	savedWordSchema,
 	starOf,
 	statusOf,
@@ -140,9 +141,14 @@ export function unsaveVocab(english: string, meaning: string, source: string) {
 	save();
 }
 
-/** The saved list removes the saved word only; the record it studies under stays (R15). */
+/**
+ * The saved list removes the saved word (R15). Its own record goes too, so saving it again starts
+ * from 안 봄; a word the PDF has keeps the PDF word's record.
+ */
 export function removeSaved(english: string) {
 	delete wordsRecord.saved[english];
+	const { key } = savedItem(english);
+	if (key.startsWith('saved:')) delete wordsRecord.entries[key];
 	save();
 }
 

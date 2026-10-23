@@ -178,6 +178,24 @@ test('opens 틀린 문제 first when both have items and keeps the word tab in t
 	await expect(page.getByRole('heading', { name: '복습할 단어가 없어요' })).toBeVisible();
 });
 
+// Regression: with no wrong questions, the last due word's chip change emptied the due list and
+// swapped the whole screen for '틀린 문제가 없어요', so the row could not take its next status.
+test('keeps the last due word in place while its status changes', async ({ page }) => {
+	await page.clock.setFixedTime(new Date('2026-10-23T09:00:00'));
+	await seedWords(page, rated(1, 1, 'new', '2026-10-20'));
+	await page.goto('/review');
+	await expect(tab(page, '단어')).toHaveAttribute('aria-selected', 'true');
+	const chip = wordRows(page)
+		.first()
+		.getByRole('button', { name: /^상태 / });
+	await chip.click();
+	await expect(chip).toHaveAccessibleName('상태 애매, 눌러서 바꾸기');
+	await chip.click();
+	await expect(chip).toHaveAccessibleName('상태 완벽, 눌러서 바꾸기');
+	await expect(wordRows(page)).toHaveCount(1);
+	await expect(page.getByRole('heading', { name: '틀린 문제가 없어요' })).toHaveCount(0);
+});
+
 test('opens the cards of the word Day for today, then offers the next Day', async ({ page }) => {
 	await page.goto('/');
 	const words = page.getByRole('region', { name: '오늘의 단어' });

@@ -41,6 +41,13 @@
 		['words', '단어']
 	];
 	const counts = $derived({ questions: items.length, words: words.length });
+	// Once anything is listed, the tabs stay while the screen is open: rating the last due word
+	// from its chip keeps its row instead of swapping the screen for '틀린 문제가 없어요'.
+	let listed = false;
+	const nothingToReview = $derived.by(() => {
+		listed ||= items.length > 0 || words.length > 0;
+		return !listed;
+	});
 </script>
 
 {#snippet noQuestions()}
@@ -56,11 +63,11 @@
 <main
 	class={[
 		'mx-auto w-full max-w-[760px] px-4 pt-6 [&_h1]:outline-none',
-		items.length || words.length ? 'pb-28' : 'pb-12'
+		nothingToReview ? 'pb-12' : 'pb-28'
 	]}
 >
 	<h1 class="text-[28px]/[1.25] font-bold tracking-[-0.5px]">복습</h1>
-	{#if !items.length && !words.length}
+	{#if nothingToReview}
 		<p class="mt-1 text-sm text-muted-foreground">Day 상관없이 틀린 문제를 모았어요</p>
 		{@render noQuestions()}
 	{:else}

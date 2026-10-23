@@ -5,13 +5,12 @@
 	import { resolve } from '$app/paths';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { focusMainHeading } from '#lib/components/shell/focus-heading.js';
-	import { progress } from '#lib/progress/store.svelte.js';
 	import { countStatuses, deckOf, starOf, statusOf } from '#lib/progress/words.js';
 	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
-	import { noVoiceMessage, speech } from '#lib/speech/player.svelte.js';
-	import { spokenWord } from './card-session';
+	import { speech } from '#lib/speech/player.svelte.js';
 	import WordListFilters, { type WordFilter } from './WordListFilters.svelte';
 	import WordRow, { type CoverMode, type ListWord } from './WordRow.svelte';
+	import { WordSpeech } from './word-speech.svelte.js';
 
 	let {
 		title,
@@ -38,15 +37,12 @@
 	let filter = $state<WordFilter>('all');
 	// The rows a filter matched when it was picked, so a row whose status changes stays in place.
 	let picked = $state.raw<Set<string> | null>(null);
-	let noVoice = $state(false);
+	const wordSpeech = new WordSpeech();
 
 	const counts = $derived(countStatuses(wordsRecord.entries, words));
 	const stars = $derived(words.filter((word) => starOf(wordsRecord.entries, word)).length);
 	const deck = $derived(deckOf(wordsRecord.entries, words).length);
 	const rows = $derived(words.filter((word) => !picked || picked.has(word.id)));
-	const notice = $derived(
-		noVoice ? noVoiceMessage : speech.failed ? '발음을 재생하지 못했어요.' : ''
-	);
 
 	function setMode(next: CoverMode) {
 		mode = next;
@@ -64,11 +60,6 @@
 			next === 'all'
 				? null
 				: new Set(words.filter((word) => matches(word, next)).map((word) => word.id));
-	}
-
-	function speak(word: ListWord) {
-		noVoice = !speech.voices.length;
-		speech.play([{ text: spokenWord(word.word), speaker: 0 }], 0, progress.settings.rate);
 	}
 
 	// The row goes, so focus moves to the remove button now in its place, else the one above;
@@ -128,7 +119,7 @@
 				{mode}
 				revealed={revealed.has(word.id)}
 				onReveal={() => revealed.add(word.id)}
-				onSpeak={() => speak(word)}
+				onSpeak={() => wordSpeech.speak(word.word)}
 				onRemove={onRemove && (() => remove(word, index))}
 			/>
 		{/each}
@@ -139,7 +130,7 @@
 		<div
 			class="mx-auto w-full max-w-[760px] px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
 		>
-			<p role="status" class="text-sm text-muted-foreground not-empty:mb-2">{notice}</p>
+			<p role="status" class="text-sm text-muted-foreground not-empty:mb-2">{wordSpeech.notice}</p>
 			{#if !deck}
 				<p id="{id}-empty" class="mb-2 text-center text-sm text-muted-foreground">
 					외울 단어가 없어요

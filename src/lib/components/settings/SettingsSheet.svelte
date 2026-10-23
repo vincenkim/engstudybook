@@ -34,7 +34,9 @@
 		}
 		const replaced = next.words
 			? '문제집 기록과 단어 기록을'
-			: '문제집 기록을 (단어 기록은 그대로 둡니다)';
+			: next.unreadableWords
+				? '문제집 기록을 (파일의 단어 기록은 읽을 수 없어 지금 단어 기록을 그대로 둡니다)'
+				: '문제집 기록을 (단어 기록은 그대로 둡니다)';
 		if (!confirm(`지금 ${replaced} 가져온 기록으로 바꿉니다. 계속할까요?`)) return;
 		restoreBackup(next);
 		importMessage = '기록을 가져왔습니다.';

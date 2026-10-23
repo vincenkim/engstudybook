@@ -148,6 +148,24 @@ test('shows the meanings first from 뜻 to 영어 and keeps the direction', asyn
 	await expect(front(page)).toContainText('추가의, 부가의');
 });
 
+test('stars a word on its card and shows the star in the Day list', async ({ page }) => {
+	await page.goto('/words/w1d1');
+	await cardButton(page).click();
+	await expect(front(page)).toContainText('additional');
+	// The name stays neutral, so it never gives the word away from 뜻 to 영어.
+	const cardStar = page.getByRole('button', { name: '별표', exact: true });
+	await expect(cardStar).toHaveAttribute('aria-pressed', 'false');
+	await cardStar.click();
+	await expect(cardStar).toHaveAttribute('aria-pressed', 'true');
+
+	await closeLink(page).click();
+	await expect(heading(page)).toHaveText('Week 1 · Day 1');
+	const rowStar = page.getByRole('button', { name: '1번 별표', exact: true });
+	await expect(rowStar).toHaveAttribute('aria-pressed', 'true');
+	await page.reload();
+	await expect(rowStar).toHaveAttribute('aria-pressed', 'true');
+});
+
 test('flips with Space and rates the back with 1–3, moving focus for the next key', async ({
 	page
 }) => {

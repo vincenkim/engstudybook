@@ -21,6 +21,7 @@
 	import { starOf, statusOf } from '#lib/progress/words.js';
 	import { setStatusFromList, toggleStar, wordsRecord } from '#lib/progress/words-store.svelte.js';
 	import StatusChip from './StatusChip.svelte';
+	import WordLines from './WordLines.svelte';
 
 	let {
 		word,
@@ -80,22 +81,7 @@
 		{/if}
 		{#if showMeaning}
 			<div bind:this={meaningArea} tabindex="-1" class={['mt-1 text-[15px]/[1.6]', area]}>
-				{#each word.lines as line, lineIndex (lineIndex)}
-					{@const last = line.senses.length - 1}
-					<p>
-						{#if line.pos}
-							<span
-								class="mr-1.5 inline-block min-w-[22px] rounded bg-muted px-1 text-center text-xs font-bold text-muted-foreground"
-								>{line.pos}</span
-							>
-						{/if}
-						{#each line.senses as sense, index (index)}
-							{#if sense.key}<strong>{sense.text}</strong>{:else}{sense.text}{/if}{index < last
-								? ', '
-								: ''}
-						{/each}
-					</p>
-				{/each}
+				<WordLines lines={word.lines} size="sm" />
 			</div>
 		{:else}
 			<button type="button" class={cover} onclick={() => reveal(() => meaningArea)}>

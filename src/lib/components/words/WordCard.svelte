@@ -1,9 +1,11 @@
 <script lang="ts">
-	import { Volume2 } from '@lucide/svelte';
+	import { Star, Volume2 } from '@lucide/svelte';
 	import type { WordStatus } from '#lib/content/words.js';
-	import type { CardDirection } from '#lib/progress/words-store.svelte.js';
+	import { starOf } from '#lib/progress/words.js';
+	import { toggleStar, wordsRecord, type CardDirection } from '#lib/progress/words-store.svelte.js';
 	import type { CardWord } from './card-session';
 	import { wordStatusLabels } from './status-labels';
+	import WordLines from './WordLines.svelte';
 
 	let {
 		card,
@@ -26,28 +28,10 @@
 	} = $props();
 
 	const { label, icon: Icon, chip } = $derived(wordStatusLabels[status]);
+	const starred = $derived(starOf(wordsRecord.entries, card));
 	// From 뜻 to 영어 the front would give the word away, so only the back reads it aloud (KTD10).
 	const speakable = $derived(flipped || direction === 'en-ko');
 </script>
-
-{#snippet senses()}
-	{#each card.lines as line, lineIndex (lineIndex)}
-		{@const last = line.senses.length - 1}
-		<p>
-			{#if line.pos}
-				<span
-					class="mr-2 inline-block min-w-6 rounded-md bg-muted px-1.5 text-center align-[2px] text-[13px] font-bold text-muted-foreground"
-					>{line.pos}</span
-				>
-			{/if}
-			{#each line.senses as sense, index (index)}
-				{#if sense.key}<strong>{sense.text}</strong>{:else}{sense.text}{/if}{index < last
-					? ', '
-					: ''}
-			{/each}
-		</p>
-	{/each}
-{/snippet}
 
 <div
 	class="mt-4 flex min-h-[400px] flex-col rounded-[20px] border bg-card p-5 shadow-[0_6px_20px_rgb(24_32_27/0.06)]"
@@ -63,16 +47,28 @@
 			<span class="sr-only">지금 상태</span>
 			{label}
 		</span>
-		{#if speakable}
+		<div class="flex">
+			<!-- Not named after the word: from 뜻 to 영어 the front keeps it hidden. -->
 			<button
 				type="button"
-				aria-label="발음 듣기"
-				class="inline-flex size-11 items-center justify-center rounded-xl text-primary hover:bg-muted"
-				onclick={onSpeak}
+				aria-label="별표"
+				aria-pressed={starred}
+				class="inline-flex size-11 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
+				onclick={() => toggleStar(card)}
 			>
-				<Volume2 aria-hidden="true" class="size-[22px]" />
+				<Star aria-hidden="true" class={['size-[22px]', starred && 'fill-primary text-primary']} />
 			</button>
-		{/if}
+			{#if speakable}
+				<button
+					type="button"
+					aria-label="발음 듣기"
+					class="inline-flex size-11 items-center justify-center rounded-xl text-primary hover:bg-muted"
+					onclick={onSpeak}
+				>
+					<Volume2 aria-hidden="true" class="size-[22px]" />
+				</button>
+			{/if}
+		</div>
 	</div>
 	{#if flipped}
 		<div
@@ -82,7 +78,9 @@
 		>
 			<span lang="en" class="text-[26px] font-bold break-words">{card.word}</span>
 			{#if card.ipa}<span class="text-sm text-muted-foreground">{card.ipa}</span>{/if}
-			<div class="mt-4 grid gap-2.5 text-[19px]/[1.5]">{@render senses()}</div>
+			<div class="mt-4 grid gap-2.5 text-[19px]/[1.5]">
+				<WordLines lines={card.lines} size="lg" />
+			</div>
 		</div>
 	{:else}
 		<button
@@ -97,7 +95,9 @@
 				>
 				{#if card.ipa}<span class="text-base text-muted-foreground">{card.ipa}</span>{/if}
 			{:else}
-				<span class="grid gap-2.5 text-[21px]/[1.5]">{@render senses()}</span>
+				<span class="grid gap-2.5 text-[21px]/[1.5]">
+					<WordLines lines={card.lines} size="lg" />
+				</span>
 			{/if}
 			<span class="mt-6 text-[13px] text-muted-foreground">
 				카드를 누르면 {direction === 'en-ko' ? '뜻이' : '영어가'} 보여요

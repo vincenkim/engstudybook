@@ -65,11 +65,16 @@ export function addDays(date: string, days: number) {
 
 const knownIntervals = [7, 14, 30, 60, 120];
 
-/** Days until a rated word comes back (KTD6); 안 봄 has no schedule. */
+/**
+ * Days until a rated word comes back (KTD6); 안 봄 has no schedule. A 완벽 record without a run,
+ * as an edited backup can hold, counts as a first 완벽.
+ */
 function intervalOf(status: WordStatus, streak: number) {
 	if (status === 'new') return 1;
 	if (status === 'unsure') return 3;
-	if (status === 'known') return knownIntervals[Math.min(streak, knownIntervals.length) - 1];
+	if (status === 'known') {
+		return knownIntervals[Math.min(Math.max(streak, 1), knownIntervals.length) - 1];
+	}
 	return null;
 }
 

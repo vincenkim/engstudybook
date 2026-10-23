@@ -152,6 +152,8 @@ export interface Backup {
 	progress: Progress;
 	/** Missing in files saved before the wordbook; the words then stay as they are (R17). */
 	words?: WordsRecord;
+	/** The file has a word record this app cannot read; the words stay and the import says so. */
+	unreadableWords?: boolean;
 }
 
 /** The exported file: the progress record with the word record beside it. */
@@ -177,7 +179,8 @@ export async function readProgressFile(file: File): Promise<Backup | null> {
 		const raw = JSON.parse(await file.text());
 		const read = parseProgress(raw, questionsOfDay);
 		if (!read) return null;
-		return { progress: read, words: parseWordsRecord(raw?.words) ?? undefined };
+		const words = parseWordsRecord(raw?.words) ?? undefined;
+		return { progress: read, words, unreadableWords: raw?.words !== undefined && !words };
 	} catch {
 		return null;
 	}

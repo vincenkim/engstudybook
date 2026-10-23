@@ -29,7 +29,6 @@
 	import { focusMainHeading } from '#lib/components/shell/focus-heading.js';
 	import { focusKind } from '#lib/components/study/focus-kind.js';
 	import { keyAction } from '#lib/keyboard.js';
-	import { progress } from '#lib/progress/store.svelte.js';
 	import { statusOf } from '#lib/progress/words.js';
 	import {
 		rateWord,
@@ -37,14 +36,13 @@
 		wordsRecord,
 		type CardDirection
 	} from '#lib/progress/words-store.svelte.js';
-	import { noVoiceMessage, speech } from '#lib/speech/player.svelte.js';
+	import { speech } from '#lib/speech/player.svelte.js';
 	import {
 		againDeck,
 		comesBack,
 		currentCard,
 		progressOf,
 		rateCard,
-		spokenWord,
 		startSession,
 		summaryOf,
 		type CardRating,
@@ -53,6 +51,7 @@
 	import CardSummary from './CardSummary.svelte';
 	import { wordStatusLabels } from './status-labels';
 	import WordCard from './WordCard.svelte';
+	import { WordSpeech } from './word-speech.svelte.js';
 
 	let {
 		deck,
@@ -81,16 +80,13 @@
 
 	let session = $state.raw(startSession(untrack(() => deck)));
 	let flipped = $state(false);
-	let noVoice = $state(false);
+	const wordSpeech = new WordSpeech();
 	let frontButton = $state<HTMLButtonElement>();
 	let backArea = $state<HTMLElement>();
 
 	const card = $derived(currentCard(session));
 	const direction = $derived(wordsRecord.direction ?? 'en-ko');
 	const { position, total } = $derived(progressOf(session));
-	const notice = $derived(
-		noVoice ? noVoiceMessage : speech.failed ? '발음을 재생하지 못했어요.' : ''
-	);
 
 	// Focus leaves the front button for the back itself, so Space cannot press a rating (KTD11).
 	async function flip() {
@@ -114,11 +110,6 @@
 	function rate(rated: CardWord, status: CardRating) {
 		rateWord(rated, status);
 		void show(rateCard(session, status));
-	}
-
-	function speak(word: string) {
-		noVoice = !speech.voices.length;
-		speech.play([{ text: word, speaker: 0 }], 0, progress.settings.rate);
 	}
 
 	// The cards sit one history entry above the screen that opened them (KTD9).
@@ -204,11 +195,11 @@
 			{flipped}
 			status={statusOf(wordsRecord.entries, card)}
 			onFlip={flip}
-			onSpeak={() => speak(spokenWord(card.word))}
+			onSpeak={() => wordSpeech.speak(card.word)}
 			bind:frontButton
 			bind:backArea
 		/>
-		<p role="status" class="mt-3 text-sm text-muted-foreground">{notice}</p>
+		<p role="status" class="mt-3 text-sm text-muted-foreground">{wordSpeech.notice}</p>
 	{:else}
 		<CardSummary
 			counts={summaryOf(session)}

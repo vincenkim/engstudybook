@@ -8,12 +8,14 @@ import {
 	replaceProgress,
 	restoreBackup
 } from './store.svelte';
-import { pdfItem } from './words';
+import { pdfItem, savedItem, statusOf } from './words';
 import {
 	defaultWordsRecord,
 	parseWordsRecord,
 	rateWord,
+	removeSaved,
 	replaceWords,
+	saveVocab,
 	setStatusFromList,
 	toggleStar,
 	wordsRecord,
@@ -127,5 +129,35 @@ describe('backup', () => {
 		const v1 = { settings: { mode: 'instant', rate: 1 }, days: {} };
 		restoreBackup((await readProgressFile(fileOf(v1)))!);
 		expect(wordsRecord).toEqual(wordsSaved);
+	});
+
+	it('keeps the words and says so when the file’s word record cannot be read', async () => {
+		replaceWords(structuredClone(wordsSaved));
+		const read = (await readProgressFile(fileOf({ ...progressBefore, words: { version: 9 } })))!;
+		expect(read.unreadableWords).toBe(true);
+		restoreBackup(read);
+		expect(progress.days).toEqual(progressBefore.days);
+		expect(wordsRecord).toEqual(wordsSaved);
+		expect((await readProgressFile(fileOf(progressBefore)))!.unreadableWords).toBe(false);
+	});
+});
+
+describe('saved words', () => {
+	it('forgets the record of a removed saved word the PDF lacks, so saving it again starts over', () => {
+		saveVocab('take leave', '휴가를 내다', 'd03-12');
+		rateWord(savedItem('take leave'), 'known');
+		removeSaved('take leave');
+		expect(wordsRecord.entries['saved:take leave']).toBeUndefined();
+		saveVocab('take leave', '휴가를 내다', 'd03-12');
+		expect(statusOf(wordsRecord.entries, savedItem('take leave'))).toBe('unseen');
+	});
+
+	it('keeps the PDF word’s record when a saved word that shares it is removed', () => {
+		const delay = savedItem('delay');
+		expect(delay.key).not.toMatch(/^saved:/);
+		saveVocab('delay', '지연', 'd11-13');
+		rateWord(delay, 'known');
+		removeSaved('delay');
+		expect(wordsRecord.entries[delay.key]).toMatchObject({ status: 'known' });
 	});
 });

@@ -90,6 +90,12 @@ describe('status and schedule', () => {
 		expect(dueOn(entry)).toBe('2026-10-30');
 	});
 
+	// Regression: a 완벽 record without a run, as in an edited backup, read interval -1 and threw.
+	it('schedules a 완벽 record without a run like a first 완벽', () => {
+		expect(dueOn({ status: 'known', reviewed: today })).toBe('2026-10-30');
+		expect(dueOn({ status: 'known', reviewed: today, streak: 0 })).toBe('2026-10-30');
+	});
+
 	it('takes the date a word was rated at 23:59 as that day', () => {
 		const late = localDate(new Date(2026, 9, 23, 23, 59));
 		expect(late).toBe(today);
