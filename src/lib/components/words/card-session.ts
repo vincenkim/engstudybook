@@ -82,10 +82,12 @@ export function summaryOf({ ratings }: CardSession) {
 	return counts;
 }
 
+const againRatings: CardRating[] = ['new', 'unsure'];
+
 /** The deck of '처음·애매만 한 번 더': the words last rated 처음 or 애매, in deck order. */
 export const againDeck = ({ cards, ratings }: CardSession) =>
 	cards.filter(
 		(card, index) =>
-			['new', 'unsure'].includes(ratings[card.key]) &&
+			againRatings.includes(ratings[card.key]) &&
 			cards.findIndex(({ key }) => key === card.key) === index
 	);

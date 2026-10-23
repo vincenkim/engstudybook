@@ -1,18 +1,15 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { wordDays, wordsOf } from '#lib/content/words.js';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { dayCardsHref } from '#lib/components/words/CardSession.svelte';
 	import StatusBar from '#lib/components/words/StatusBar.svelte';
-	import { countStatuses, deckOf, pdfItem, todayWordDay } from '#lib/progress/words.js';
+	import { countStatuses, deckOf, pdfDays, todayWordDay } from '#lib/progress/words.js';
 	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
-
-	const days = wordDays.map((info) => ({ ...info, items: wordsOf(info.key).map(pdfItem) }));
 
 	const id = $props.id();
 	const day = $derived.by(() => {
-		const key = todayWordDay(wordsRecord.entries, wordsRecord.lastDay, days);
-		return days.find((day) => day.key === key)!;
+		const key = todayWordDay(wordsRecord.entries, wordsRecord.lastDay, pdfDays);
+		return pdfDays.find((day) => day.key === key)!;
 	});
 	const counts = $derived(countStatuses(wordsRecord.entries, day.items));
 	const deck = $derived(deckOf(wordsRecord.entries, day.items).length);

@@ -116,6 +116,9 @@ export function dueItems<T extends StudyItem>(entries: WordEntries, items: T[], 
 export const deckOf = <T extends StudyItem>(entries: WordEntries, items: T[]) =>
 	items.filter((item) => statusOf(entries, item) !== 'known');
 
+/** A repeated word shares one record, so the wordbook counts it once (R2). */
+export const uniqueWordCount = (items: StudyItem[]) => uniqueByKey(items).length;
+
 export function countStatuses(entries: WordEntries, items: StudyItem[]) {
 	const counts: Record<WordStatus, number> = { unseen: 0, new: 0, unsure: 0, known: 0 };
 	for (const item of uniqueByKey(items)) counts[statusOf(entries, item)]++;
@@ -140,6 +143,12 @@ export function todayWordDay(
 	const left = (day: { items: StudyItem[] }) => deckOf(entries, day.items).length;
 	return days.reduce((best, day) => (left(day) > left(best) ? day : best)).key;
 }
+
+/** The PDF Days in order, each with its rows as study items. */
+export const pdfDays = wordDays.map((info) => ({ ...info, items: wordsOf(info.key).map(pdfItem) }));
+
+/** Every PDF row as a study item, a repeated word in both of its Days. */
+export const pdfItems = pdfDays.flatMap(({ items }) => items);
 
 /** A saved word goes by its English in lowercase with single spaces: 'Take Leave' is 'take leave'. */
 export const normalizeEnglish = (english: string) =>

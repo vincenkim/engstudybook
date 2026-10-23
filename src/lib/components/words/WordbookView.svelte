@@ -1,35 +1,37 @@
 <script lang="ts">
 	import { Bookmark, ChevronRight } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
-	import { wordDays, wordsOf } from '#lib/content/words.js';
-	import { countStatuses, pdfItem, todayWordDay } from '#lib/progress/words.js';
+	import {
+		countStatuses,
+		pdfDays,
+		pdfItems,
+		todayWordDay,
+		uniqueWordCount
+	} from '#lib/progress/words.js';
 	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
 	import { cn } from '#lib/utils.js';
 	import StatusBar from './StatusBar.svelte';
 	import WeekSection from './WeekSection.svelte';
 	import { barOrder, wordStatusLabels } from './status-labels.js';
 
-	const days = wordDays.map((info) => ({ ...info, items: wordsOf(info.key).map(pdfItem) }));
-	const weeks = [...new Set(days.map(({ week }) => week))].map((number) => ({
+	const weeks = [...new Set(pdfDays.map(({ week }) => week))].map((number) => ({
 		number,
-		days: days.filter(({ week }) => week === number)
+		days: pdfDays.filter(({ week }) => week === number)
 	}));
-	const allItems = days.flatMap(({ items }) => items);
-	// The whole wordbook counts unique words; a repeated word shares one record (R2).
-	const wordCount = new Set(allItems.map(({ key }) => key)).size;
+	const wordCount = uniqueWordCount(pdfItems);
 
-	const counts = $derived(countStatuses(wordsRecord.entries, allItems));
+	const counts = $derived(countStatuses(wordsRecord.entries, pdfItems));
 	const savedCount = $derived(Object.keys(wordsRecord.saved).length);
 
 	// The Week of today's Day starts open; after that each Week keeps the learner's choice (KTD8).
-	const current = todayWordDay(wordsRecord.entries, wordsRecord.lastDay, days);
+	const current = todayWordDay(wordsRecord.entries, wordsRecord.lastDay, pdfDays);
 	const open = $state(weeks.map((week) => week.days.some(({ key }) => key === current)));
 </script>
 
 <main class="mx-auto w-full max-w-[760px] px-4 pt-6 pb-12">
 	<h1 class="text-[28px] font-bold tracking-[-0.5px]">단어장</h1>
 	<p class="mt-1 text-sm text-muted-foreground">
-		{weeks.length}주 · {days.length}일 · {wordCount.toLocaleString('ko-KR')}단어
+		{weeks.length}주 · {pdfDays.length}일 · {wordCount.toLocaleString('ko-KR')}단어
 	</p>
 	<section aria-label="전체 단어 상태" class="mt-4 rounded-2xl border bg-card p-4">
 		<StatusBar {counts} class="h-2.5" />

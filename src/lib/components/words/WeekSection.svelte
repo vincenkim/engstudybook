@@ -6,7 +6,6 @@
 	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
 	import StatusBar from './StatusBar.svelte';
 
-	/** A Day counts its own rows, so a word repeated from the Day before counts in both (R2). */
 	let {
 		week,
 		days,
@@ -17,6 +16,7 @@
 		open?: boolean;
 	} = $props();
 
+	// A Day counts its own rows, so a word repeated from the Day before counts in both (R2).
 	const rows = $derived(
 		days.map(({ key, day, items }) => ({
 			key,

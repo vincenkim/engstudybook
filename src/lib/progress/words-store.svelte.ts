@@ -147,11 +147,13 @@ export function removeSaved(english: string) {
 }
 
 export function setLastWordDay(day: string) {
+	if (wordsRecord.lastDay === day) return;
 	wordsRecord.lastDay = day;
 	save();
 }
 
 export function setCardDirection(direction: CardDirection) {
+	if (wordsRecord.direction === direction) return;
 	wordsRecord.direction = direction;
 	save();
 }

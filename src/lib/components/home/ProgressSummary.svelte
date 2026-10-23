@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { curriculum } from '#lib/content/index.js';
-	import { wordDays, wordsOf } from '#lib/content/words.js';
 	import { finishedDays } from '#lib/components/workbook/phase-progress.js';
 	import { progress } from '#lib/progress/store.svelte.js';
-	import { countStatuses, pdfItem } from '#lib/progress/words.js';
+	import { countStatuses, pdfItems, uniqueWordCount } from '#lib/progress/words.js';
 	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
 
-	const wordItems = wordDays.flatMap(({ key }) => wordsOf(key).map(pdfItem));
-	// The wordbook counts unique words; a repeated word shares one record (R2).
-	const wordCount = new Set(wordItems.map(({ key }) => key)).size;
-	const known = $derived(countStatuses(wordsRecord.entries, wordItems).known);
+	const wordCount = uniqueWordCount(pdfItems);
+	const known = $derived(countStatuses(wordsRecord.entries, pdfItems).known);
 </script>
 
 <section aria-labelledby="overall-title" class="rounded-2xl border bg-card p-5">
