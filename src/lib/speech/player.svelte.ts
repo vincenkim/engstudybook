@@ -13,6 +13,8 @@ class SpeechPlayer {
 	playing = $state(false);
 	/** Index of the line being read aloud; -1 while nothing plays (KTD16). */
 	line = $state(-1);
+	/** The last play stopped on a speech error; cleared by the next play or stop (KTD15). */
+	failed = $state(false);
 	#token = 0;
 	// Chrome drops `onend` when the utterance is garbage-collected mid-speech, so keep a reference.
 	#current: SpeechSynthesisUtterance | null = null;
@@ -32,6 +34,7 @@ class SpeechPlayer {
 	stop() {
 		this.#token++;
 		this.#idle();
+		this.failed = false;
 		if (this.#current) this.#current.onend = null;
 		this.#current = null;
 		if (this.supported) speechSynthesis.cancel();
@@ -56,7 +59,9 @@ class SpeechPlayer {
 			Object.assign(utterance, { voice, lang: voice.lang, pitch, rate });
 			utterance.onend = () => setTimeout(() => speak(index + 1), pauseBetweenLines);
 			utterance.onerror = () => {
-				if (token === this.#token) this.#idle();
+				if (token !== this.#token) return;
+				this.failed = true;
+				this.#idle();
 			};
 			this.#current = utterance;
 			speechSynthesis.speak(utterance);
