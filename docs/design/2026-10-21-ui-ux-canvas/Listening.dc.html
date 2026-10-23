@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Part 2 듣기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2556C4}a:hover{color:#1A3F94}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:52px;padding:0 18px;border-radius:12px;border:1px solid #DCE2DD;background:#FFFFFF;color:#18201B;font:inherit;font-size:16px;font-weight:500;text-decoration:none;box-sizing:border-box;cursor:pointer}
+.btn.primary{background:#2556C4;border-color:#2556C4;color:#FFFFFF;font-weight:700}
+.btn.primary:hover{background:#1A3F94;color:#FFFFFF}
+.icon-btn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;border:0;background:transparent;color:#18201B;cursor:pointer;text-decoration:none}
+.icon-btn:hover{background:#ECEEEC;color:#18201B}
+.seg{min-height:40px;padding:0 14px;border:0;border-radius:8px;background:transparent;font:inherit;font-size:14px;color:#5A645E;cursor:pointer}
+.seg[aria-pressed="true"]{background:#FFFFFF;color:#18201B;font-weight:700;box-shadow:0 1px 2px rgba(24,32,27,.12)}
+.opt{display:flex;align-items:center;justify-content:center;flex:1;min-height:72px;border-radius:14px;border:1.5px solid #DCE2DD;background:#FFFFFF;font:inherit;font-size:22px;font-weight:700;color:#18201B;cursor:pointer}
+.opt:hover{border-color:#2556C4;background:#F3F6FE}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F6F4; color: #18201B; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <header style="position: absolute; top: 0; left: 0; right: 0; background: #FFFFFF; border-bottom: 1px solid #DCE2DD">
+    <div style="height: 56px; display: flex; align-items: center; gap: 2px; padding: 4px 6px 0">
+      <button class="icon-btn" type="button" aria-label="문제집으로 나가기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+      </button>
+      <div style="flex: 1; min-width: 0">
+        <div style="font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Day 1 · Who 의문문</div>
+        <div style="font-size: 12px; color: #5A645E">실전 16 / 25</div>
+      </div>
+      <button class="icon-btn" type="button" aria-label="개념 다시 보기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"></path></svg>
+      </button>
+      <button class="icon-btn" type="button" aria-label="문항 지도 열기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      </button>
+    </div>
+    <div role="img" aria-label="실전 25문항 중 15문항 풂" style="display: flex; gap: 3px; padding: 4px 12px 10px">
+      <sc-for list="{{dots}}" as="d" hint-placeholder-count="25">
+        <span style="flex: 1; height: 6px; border-radius: 3px; {{d.style}}"></span>
+      </sc-for>
+    </div>
+  </header>
+
+  <main style="position: absolute; inset: 77px 0 84px 0; overflow: auto; padding: 18px 16px 24px">
+    <span style="display: inline-block; padding: 2px 10px; border-radius: 999px; background: #EAF0FD; color: #1A3F94; font-size: 13px; font-weight: 700">Part 2 · 질문 응답</span>
+    <p style="margin: 10px 0 0; font-size: 15px; line-height: 1.6">질문 하나와 응답 세 개를 듣고 알맞은 응답을 고르세요.</p>
+
+    <section aria-label="듣기" style="margin-top: 16px; padding: 20px 16px; background: #FFFFFF; border: 1px solid #DCE2DD; border-radius: 16px">
+      <div style="display: flex; align-items: center; gap: 16px">
+        <button type="button" aria-label="일시 정지" style="width: 72px; height: 72px; flex: none; border-radius: 50%; border: 0; background: #2556C4; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; cursor: pointer">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
+        </button>
+        <div style="flex: 1; min-width: 0">
+          <p style="margin: 0; font-size: 15px; font-weight: 700">응답 (A) 듣는 중</p>
+          <ol aria-label="듣기 순서" style="display: flex; gap: 4px; margin: 10px 0 0; padding: 0; list-style: none">
+            <li style="flex: 2; text-align: center"><span style="display: block; height: 6px; border-radius: 3px; background: #2556C4"></span><span style="font-size: 12px; color: #5A645E">질문</span></li>
+            <li style="flex: 1; text-align: center"><span style="display: block; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #2556C4 55%, #DCE2DD 55%)"></span><span style="font-size: 12px; font-weight: 700; color: #18201B">A</span></li>
+            <li style="flex: 1; text-align: center"><span style="display: block; height: 6px; border-radius: 3px; background: #DCE2DD"></span><span style="font-size: 12px; color: #5A645E">B</span></li>
+            <li style="flex: 1; text-align: center"><span style="display: block; height: 6px; border-radius: 3px; background: #DCE2DD"></span><span style="font-size: 12px; color: #5A645E">C</span></li>
+          </ol>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 16px">
+        <button type="button" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE2DD; background: #FFFFFF; font: inherit; font-size: 14px; color: #18201B; cursor: pointer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"></path><path d="M3 3v5h5"></path></svg>
+          처음부터
+        </button>
+        <div role="group" aria-label="음성 속도" style="display: inline-flex; padding: 3px; border-radius: 10px; background: #E7EAE7">
+          <button class="seg" type="button" aria-pressed="false">0.8배</button>
+          <button class="seg" type="button" aria-pressed="true">1배</button>
+        </div>
+      </div>
+    </section>
+
+    <p style="margin: 20px 0 8px; font-size: 13px; color: #5A645E">응답 글자는 고른 뒤에 스크립트와 함께 보여요.</p>
+    <div role="group" aria-label="응답 고르기" style="display: flex; gap: 8px">
+      <button class="opt" type="button" aria-label="응답 A">A</button>
+      <button class="opt" type="button" aria-label="응답 B">B</button>
+      <button class="opt" type="button" aria-label="응답 C">C</button>
+    </div>
+  </main>
+
+  <nav aria-label="문항 이동" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 10px 16px 22px; display: flex; gap: 8px; background: #FFFFFF; border-top: 1px solid #DCE2DD">
+    <button class="btn" type="button" aria-label="깃발 표시: 나중에 다시 보기" style="width: 52px; padding: 0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg>
+    </button>
+    <button class="btn" type="button" aria-label="이전 문항" style="width: 52px; padding: 0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+    </button>
+    <button class="btn primary" type="button" style="flex: 1">다음 문제</button>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const wrong = [1, 6, 8];
+    const dots = Array.from({ length: 25 }, (_, i) => {
+      if (i < 15) return { style: wrong.includes(i) ? 'background: #B42318' : 'background: #1D7A43' };
+      if (i === 15) return { style: 'background: #2556C4; margin-left: 6px' };
+      return { style: 'background: #DCE2DD' };
+    });
+    return { dots };
+  }
+}
+</script>
+</body>
+</html>

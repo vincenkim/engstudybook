@@ -1,0 +1,52 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-21T13:30:00Z" },
+  "title": "토익 학습앱 UI/UX 설계",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 390, "h": 844, "title": "오늘 (홈)", "is_interactive": true },
+    "Workbook.dc.html": { "x": 470, "y": 0, "w": 390, "h": 844, "title": "문제집 목록", "is_interactive": true },
+    "Wordbook.dc.html": { "x": 940, "y": 0, "w": 390, "h": 844, "title": "단어장 목록", "is_interactive": true },
+    "Review.dc.html": { "x": 1410, "y": 0, "w": 390, "h": 844, "title": "복습", "is_interactive": true },
+    "DayStart.dc.html": { "x": 0, "y": 1300, "w": 390, "h": 844, "title": "Day 시작", "is_interactive": true },
+    "Question.dc.html": { "x": 470, "y": 1300, "w": 390, "h": 844, "title": "Part 5 · 풀고 난 뒤", "is_interactive": true },
+    "QuestionMap.dc.html": { "x": 940, "y": 1300, "w": 390, "h": 844, "title": "문항 지도", "is_interactive": true },
+    "Passage.dc.html": { "x": 1410, "y": 1300, "w": 390, "h": 844, "title": "Part 7 · 지문 고정" },
+    "Listening.dc.html": { "x": 1880, "y": 1300, "w": 390, "h": 844, "title": "Part 2 · 듣기" },
+    "Result.dc.html": { "x": 2350, "y": 1300, "w": 390, "h": 844, "title": "Day 결과", "is_interactive": true },
+    "WordList.dc.html": { "x": 0, "y": 2600, "w": 390, "h": 844, "title": "단어 목록 · 뜻 가리기", "is_interactive": true },
+    "CardFront.dc.html": { "x": 470, "y": 2600, "w": 390, "h": 844, "title": "카드 암기 · 앞면", "is_interactive": true },
+    "CardBack.dc.html": { "x": 940, "y": 2600, "w": 390, "h": 844, "title": "카드 암기 · 뒷면과 평가", "is_interactive": true },
+    "TabletPassage.dc.html": { "x": 0, "y": 3900, "w": 1180, "h": 820, "title": "아이패드 가로 · 지문과 문제 나란히" },
+    "DesktopToday.dc.html": { "x": 1260, "y": 3900, "w": 1440, "h": 940, "title": "PC · 오늘", "expand": "fill", "is_interactive": true }
+  },
+  "order": [
+    "Main.dc.html",
+    "Workbook.dc.html",
+    "Wordbook.dc.html",
+    "Review.dc.html",
+    "DayStart.dc.html",
+    "Question.dc.html",
+    "QuestionMap.dc.html",
+    "Passage.dc.html",
+    "Listening.dc.html",
+    "Result.dc.html",
+    "WordList.dc.html",
+    "CardFront.dc.html",
+    "CardBack.dc.html",
+    "TabletPassage.dc.html",
+    "DesktopToday.dc.html"
+  ],
+  "notes": {
+    "rowA": { "x": 0, "y": -300, "text": "1. 홈과 탐색 · 휴대폰", "kind": "title1", "maxW": 1800 },
+    "rowB": { "x": 0, "y": 1000, "text": "2. 문제집 학습 · 휴대폰", "kind": "title1", "maxW": 2740 },
+    "rowC": { "x": 0, "y": 2300, "text": "3. 단어 암기 · 휴대폰", "kind": "title1", "maxW": 1330 },
+    "rowD": { "x": 0, "y": 3600, "text": "4. 큰 화면 · 아이패드와 PC", "kind": "title1", "maxW": 2700 },
+    "noteA": { "x": 1880, "y": 0, "w": 340, "size": "m", "fill": "blue", "text": "바뀐 점\n- 설정이 첫 화면을 차지하던 것 → 오른쪽 위 버튼으로\n- 열면 '이어서 하기'가 맨 위, 한 번 눌러 바로 공부\n- 하단 탭 4개: 오늘 · 문제집 · 단어장 · 복습\n- 틀린 문제와 헷갈리는 단어를 Day 상관없이 '복습'에 모음" },
+    "noteB": { "x": 2820, "y": 1300, "w": 340, "size": "m", "fill": "blue", "text": "바뀐 점\n- 33쪽 일직선 → Day 안을 '개념 · 따라 풀기 · 실전' 구간으로 나눔\n- 문항 지도로 아무 문항이나 바로 이동, 깃발 표시\n- 하단 바가 해설을 가리지 않음\n- 지문은 위에 고정, 문제만 넘어감\n- 채점 방식은 Day를 시작할 때 고름" },
+    "noteC": { "x": 1410, "y": 2600, "w": 340, "size": "m", "fill": "blue", "text": "단어 상태\n- 색은 PDF 범례 그대로: 노랑 완벽 · 베이지 애매 · 초록 처음\n- 색만으로 구분하지 않게 글자와 아이콘을 함께 표시\n- PDF에서 표시 없는 단어는 '안 봄'\n- 카드에서 '처음'을 고른 단어는 세션 끝에 한 번 더 나옴" },
+    "noteD": { "x": 2780, "y": 3900, "w": 340, "size": "m", "fill": "blue", "text": "큰 화면\n- 하단 탭 → 왼쪽 메뉴\n- 지문과 문제를 나란히 놓아 위아래 스크롤 없음\n- 키보드: 1–4 보기 · ←→ 이동 · Space 재생/뜻 보기 · F 깃발 · G 문항 지도" }
+  },
+  "designSystems": []
+}

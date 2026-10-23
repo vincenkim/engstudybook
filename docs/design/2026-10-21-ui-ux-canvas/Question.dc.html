@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Part 5 풀이</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2556C4}a:hover{color:#1A3F94}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:52px;padding:0 18px;border-radius:12px;border:1px solid #DCE2DD;background:#FFFFFF;color:#18201B;font:inherit;font-size:16px;font-weight:500;text-decoration:none;box-sizing:border-box;cursor:pointer}
+.btn:hover{border-color:#A9B3AC;color:#18201B}
+.btn.primary{background:#2556C4;border-color:#2556C4;color:#FFFFFF;font-weight:700}
+.btn.primary:hover{background:#1A3F94;color:#FFFFFF}
+.icon-btn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;border:0;background:transparent;color:#18201B;cursor:pointer;text-decoration:none}
+.icon-btn:hover{background:#ECEEEC;color:#18201B}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:0 14px;border-radius:12px;border:1.5px solid #DCE2DD;background:#FFFFFF;font:inherit;color:#18201B;text-align:left;box-sizing:border-box}
+.vocab{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 10px;border-radius:8px;background:#F5F6F4;font-size:14px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F6F4; color: #18201B; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <header style="position: absolute; top: 0; left: 0; right: 0; background: #FFFFFF; border-bottom: 1px solid #DCE2DD">
+    <div style="height: 56px; display: flex; align-items: center; gap: 2px; padding: 4px 6px 0">
+      <a class="icon-btn" href="Workbook.dc.html" aria-label="문제집으로 나가기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+      </a>
+      <div style="flex: 1; min-width: 0">
+        <div style="font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Day 2 · 형용사·부사 자리</div>
+        <div style="font-size: 12px; color: #5A645E">실전 4 / 25</div>
+      </div>
+      <button class="icon-btn" type="button" aria-label="개념 다시 보기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"></path></svg>
+      </button>
+      <a class="icon-btn" href="QuestionMap.dc.html" aria-label="문항 지도 열기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      </a>
+    </div>
+    <div role="img" aria-label="실전 25문항 중 3문항 맞힘, 4번 틀림" style="display: flex; gap: 3px; padding: 4px 12px 10px">
+      <sc-for list="{{dots}}" as="d" hint-placeholder-count="25">
+        <span style="flex: 1; height: 6px; border-radius: 3px; {{d.style}}"></span>
+      </sc-for>
+    </div>
+  </header>
+
+  <main style="position: absolute; inset: 77px 0 84px 0; overflow: auto; padding: 18px 16px 24px">
+    <span style="display: inline-block; padding: 2px 10px; border-radius: 999px; background: #EAF0FD; color: #1A3F94; font-size: 13px; font-weight: 700">Part 5 · 단문 빈칸</span>
+    <p lang="en" style="margin: 12px 0 18px; font-size: 20px; line-height: 1.6">The shipment will <span style="display: inline-block; min-width: 5em; border-bottom: 2px solid #1D7A43; color: #1D7A43; font-weight: 700; text-align: center; line-height: 1.3">definitely</span> arrive by Thursday.</p>
+
+    <div role="group" aria-label="보기" style="display: grid; gap: 8px">
+      <button class="opt" type="button" disabled style="border-color: #B42318; background: #FCEBEA">
+        <span style="font-weight: 700; color: #B42318">(A)</span>
+        <span lang="en" style="flex: 1; font-size: 17px">definite</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; color: #B42318">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>내 답 · 형용사
+        </span>
+      </button>
+      <button class="opt" type="button" disabled>
+        <span style="font-weight: 700; color: #5A645E">(B)</span>
+        <span lang="en" style="flex: 1; font-size: 17px">define</span>
+        <span style="font-size: 13px; color: #5A645E">동사</span>
+      </button>
+      <button class="opt" type="button" disabled style="border-color: #1D7A43; background: #E6F4EB">
+        <span style="font-weight: 700; color: #1D7A43">(C)</span>
+        <span lang="en" style="flex: 1; font-size: 17px">definitely</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; color: #1D7A43">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>정답 · 부사
+        </span>
+      </button>
+      <button class="opt" type="button" disabled>
+        <span style="font-weight: 700; color: #5A645E">(D)</span>
+        <span lang="en" style="flex: 1; font-size: 17px">definition</span>
+        <span style="font-size: 13px; color: #5A645E">명사</span>
+      </button>
+    </div>
+
+    <div role="status" style="margin: 18px 0 10px">
+      <p style="margin: 0; font-size: 18px; font-weight: 700; color: #B42318">틀렸어요 · 정답은 (C)</p>
+      <p style="margin: 2px 0 0; font-size: 13px; color: #5A645E">이 문제는 복습에 담았어요</p>
+    </div>
+
+    <section aria-label="해설" style="padding: 16px; background: #FFFFFF; border: 1px solid #DCE2DD; border-radius: 16px">
+      <h3 style="margin: 0; font-size: 13px; color: #5A645E">해석</h3>
+      <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.6">배송품은 목요일까지 확실히 도착할 것입니다.</p>
+      <h3 style="margin: 14px 0 0; font-size: 13px; color: #5A645E">해설</h3>
+      <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.6">조동사 <b>will</b>과 동사 <b>arrive</b> 사이는 부사 자리입니다. -ly로 끝나는 definitely가 정답입니다.</p>
+      <h3 style="margin: 14px 0 6px; font-size: 13px; color: #5A645E">어휘</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px">
+        <span class="vocab"><b lang="en">shipment</b>배송품</span>
+        <span class="vocab"><b lang="en">definitely</b>확실히</span>
+        <span class="vocab"><b lang="en">arrive</b>도착하다</span>
+      </div>
+    </section>
+  </main>
+
+  <nav aria-label="문항 이동" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 10px 16px 22px; display: flex; gap: 8px; background: #FFFFFF; border-top: 1px solid #DCE2DD">
+    <button class="btn" type="button" aria-label="깃발 표시: 나중에 다시 보기" style="width: 52px; padding: 0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg>
+    </button>
+    <button class="btn" type="button" aria-label="이전 문항" style="width: 52px; padding: 0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+    </button>
+    <a class="btn primary" href="Passage.dc.html" style="flex: 1">다음 문제</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ok = 'background: #1D7A43';
+    const dots = Array.from({ length: 25 }, (_, i) => {
+      if (i < 3) return { style: ok };
+      if (i === 3) return { style: 'background: #B42318; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 3px #18201B' };
+      return { style: 'background: #DCE2DD' + (i === 15 ? '; margin-left: 6px' : '') };
+    });
+    return { dots };
+  }
+}
+</script>
+</body>
+</html>

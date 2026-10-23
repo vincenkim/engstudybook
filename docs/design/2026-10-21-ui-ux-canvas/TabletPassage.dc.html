@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>아이패드 Part 7</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2556C4}a:hover{color:#1A3F94}
+.rail{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:64px;min-height:60px;border-radius:14px;font-size:12px;font-weight:500;color:#5A645E;text-decoration:none}
+.rail:hover{background:#ECEEEC;color:#18201B}
+.rail.on{background:#EAF0FD;color:#1A3F94;font-weight:700}
+.icon-btn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;border:0;background:transparent;color:#18201B;cursor:pointer;text-decoration:none}
+.icon-btn:hover{background:#ECEEEC;color:#18201B}
+.mini{display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #DCE2DD;background:#FFFFFF;font:inherit;font-size:13px;color:#18201B;cursor:pointer}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1.5px solid #DCE2DD;background:#FFFFFF;font:inherit;font-size:15px;color:#18201B;text-align:left;box-sizing:border-box;cursor:pointer}
+.opt:hover{border-color:#2556C4;background:#F3F6FE}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:0 18px;border-radius:12px;border:1px solid #DCE2DD;background:#FFFFFF;color:#18201B;font:inherit;font-size:15px;font-weight:500;cursor:pointer}
+.btn.primary{background:#2556C4;border-color:#2556C4;color:#FFFFFF;font-weight:700}
+kbd{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border-radius:5px;border:1px solid #C9CFCB;background:#FFFFFF;font-family:inherit;font-size:12px;font-weight:700;color:#18201B;box-sizing:border-box}
+</style>
+</helmet>
+<div style="width: 1180px; height: 820px; display: flex; background: #F5F6F4; color: #18201B; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <nav aria-label="주 메뉴" style="width: 88px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px 0; background: #FFFFFF; border-right: 1px solid #DCE2DD; box-sizing: border-box">
+    <a class="rail" href="#">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg>오늘
+    </a>
+    <a class="rail on" href="#" aria-current="page">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"></path><path d="M22 5h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"></path></svg>문제집
+    </a>
+    <a class="rail" href="#">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="14" height="14" rx="2"></rect><path d="M7 3h12a2 2 0 0 1 2 2v12"></path></svg>단어장
+    </a>
+    <a class="rail" href="#">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"></path><path d="M3 3v5h5"></path></svg>복습
+    </a>
+    <span style="flex: 1"></span>
+    <a class="rail" href="#">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"></path><circle cx="15" cy="7" r="2"></circle><circle cx="9" cy="17" r="2"></circle></svg>설정
+    </a>
+  </nav>
+
+  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+    <header style="background: #FFFFFF; border-bottom: 1px solid #DCE2DD">
+      <div style="height: 60px; display: flex; align-items: center; gap: 4px; padding: 4px 12px 0 8px">
+        <button class="icon-btn" type="button" aria-label="Day 목록으로">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+        </button>
+        <div style="flex: 1; min-width: 0">
+          <div style="font-size: 16px; font-weight: 700">Day 25 · 주제·목적 찾기</div>
+          <div style="font-size: 12px; color: #5A645E">실전 1–3 / 25 · Part 7 독해</div>
+        </div>
+        <button class="mini" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"></path></svg>개념 보기
+        </button>
+        <button class="mini" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>문항 지도
+        </button>
+      </div>
+      <div role="img" aria-label="실전 25문항 중 1문항 맞힘" style="display: flex; gap: 4px; padding: 4px 20px 12px">
+        <sc-for list="{{dots}}" as="d" hint-placeholder-count="25">
+          <span style="flex: 1; height: 6px; border-radius: 3px; {{d.style}}"></span>
+        </sc-for>
+      </div>
+    </header>
+
+    <div style="flex: 1; min-height: 0; display: flex; gap: 16px; padding: 16px">
+      <section aria-label="지문" style="flex: 1.1; min-width: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DCE2DD; border-radius: 16px">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 14px 20px 8px">
+          <span style="flex: 1; font-size: 13px; font-weight: 700; color: #2556C4">지문 · 이메일</span>
+          <button class="mini" type="button" aria-pressed="false">해석 보기</button>
+        </div>
+        <div lang="en" style="flex: 1; overflow: auto; padding: 4px 24px 24px; font-size: 17px; line-height: 1.75">
+          <div style="padding: 10px 14px; border-radius: 10px; background: #F5F6F4; font-size: 14px; line-height: 1.7">
+            <div><b>To:</b> Daniel Cho</div>
+            <div><b>From:</b> Lisa Park</div>
+            <div><b>Subject:</b> Meeting schedule change</div>
+            <div><b>Date:</b> May 3</div>
+          </div>
+          <p style="margin: 16px 0 0">Dear Mr. Cho,</p>
+          <p style="margin: 12px 0 0">I am writing to let you know that our meeting on Thursday has been moved. The new time is Friday at 2 P.M. The meeting room is the same, Room 305.</p>
+          <p style="margin: 12px 0 0">Our manager, Ms. Yoon, will be out of the office on Thursday, so she asked me to change the date. Please bring the sales report for April.</p>
+          <p style="margin: 12px 0 0">If Friday does not work for you, please reply to this e-mail by Wednesday.</p>
+          <p style="margin: 12px 0 0">Best regards,<br>Lisa Park</p>
+        </div>
+      </section>
+
+      <section aria-label="문제" style="flex: 0.9; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+        <div style="flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 12px">
+          <div style="padding: 14px 16px; background: #FFFFFF; border: 1px solid #DCE2DD; border-radius: 16px">
+            <div style="display: flex; align-items: center; gap: 8px">
+              <span style="font-size: 13px; font-weight: 700; color: #5A645E">1번</span>
+              <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; color: #1D7A43">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>맞힘
+              </span>
+              <span style="flex: 1"></span>
+              <button class="mini" type="button" aria-expanded="false">해설 보기</button>
+            </div>
+            <p lang="en" style="margin: 6px 0 0; font-size: 15px">What is the purpose of the e-mail?</p>
+            <p lang="en" style="margin: 4px 0 0; font-size: 14px; color: #1D7A43; font-weight: 700">(B) To announce a schedule change</p>
+          </div>
+
+          <div style="padding: 14px 16px; background: #FFFFFF; border: 2px solid #2556C4; border-radius: 16px">
+            <span style="font-size: 13px; font-weight: 700; color: #2556C4">2번 · 지금 풀 문제</span>
+            <p lang="en" style="margin: 6px 0 10px; font-size: 16px; font-weight: 500">Why was the meeting moved?</p>
+            <div role="group" aria-label="2번 보기" style="display: grid; gap: 6px">
+              <button class="opt" type="button"><b style="color: #5A645E">(A)</b><span lang="en">The room is not available.</span></button>
+              <button class="opt" type="button"><b style="color: #5A645E">(B)</b><span lang="en">Mr. Cho asked for a change.</span></button>
+              <button class="opt" type="button"><b style="color: #5A645E">(C)</b><span lang="en">Ms. Yoon will be away.</span></button>
+              <button class="opt" type="button"><b style="color: #5A645E">(D)</b><span lang="en">The report is not ready.</span></button>
+            </div>
+          </div>
+
+          <div style="padding: 14px 16px; background: #FFFFFF; border: 1px solid #DCE2DD; border-radius: 16px">
+            <span style="font-size: 13px; font-weight: 700; color: #5A645E">3번</span>
+            <p lang="en" style="margin: 6px 0 10px; font-size: 16px; font-weight: 500">What should Mr. Cho do if he cannot attend on Friday?</p>
+            <div role="group" aria-label="3번 보기" style="display: grid; gap: 6px">
+              <button class="opt" type="button"><b style="color: #5A645E">(A)</b><span lang="en">Call Ms. Yoon</span></button>
+              <button class="opt" type="button"><b style="color: #5A645E">(B)</b><span lang="en">Visit Room 305</span></button>
+              <button class="opt" type="button"><b style="color: #5A645E">(C)</b><span lang="en">Send the report by mail</span></button>
+              <button class="opt" type="button"><b style="color: #5A645E">(D)</b><span lang="en">Reply to the e-mail</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px">
+          <p style="flex: 1; margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 12px; color: #5A645E">
+            <span><kbd>1</kbd>–<kbd>4</kbd> 보기</span>
+            <span><kbd>↑</kbd><kbd>↓</kbd> 문항</span>
+            <span><kbd>F</kbd> 깃발</span>
+          </p>
+          <button class="btn" type="button">이전 지문</button>
+          <button class="btn primary" type="button">다음 지문</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dots = Array.from({ length: 25 }, (_, i) => {
+      if (i === 0) return { style: 'background: #1D7A43' };
+      if (i === 1) return { style: 'background: #2556C4' };
+      return { style: 'background: #DCE2DD' + (i === 13 || i === 19 ? '; margin-left: 8px' : '') };
+    });
+    return { dots };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>문항 지도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2556C4}a:hover{color:#1A3F94}
+.icon-btn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;border:0;background:transparent;color:#18201B;cursor:pointer;text-decoration:none}
+.icon-btn:hover{background:#ECEEEC;color:#18201B}
+.cell{position:relative;height:48px;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;box-sizing:border-box}
+.link{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #DCE2DD;background:#FFFFFF;color:#18201B;font-size:13px;font-weight:500;text-decoration:none}
+.link:hover{border-color:#A9B3AC;color:#18201B}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F6F4; color: #18201B; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: #FFFFFF">
+    <div style="height: 76px; border-bottom: 1px solid #DCE2DD"></div>
+    <div style="margin: 18px 16px 0; height: 24px; width: 120px; border-radius: 999px; background: #EAF0FD"></div>
+    <div style="margin: 14px 16px 0; height: 60px; border-radius: 8px; background: #F5F6F4"></div>
+  </div>
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(24, 32, 27, 0.45)"></div>
+
+  <section role="dialog" aria-modal="true" aria-labelledby="map-title" style="position: absolute; left: 0; right: 0; bottom: 0; height: 640px; box-sizing: border-box; padding: 8px 16px 28px; background: #FFFFFF; border-radius: 20px 20px 0 0; display: flex; flex-direction: column">
+    <div aria-hidden="true" style="width: 40px; height: 4px; border-radius: 2px; background: #C9CFCB; margin: 0 auto 6px"></div>
+    <div style="display: flex; align-items: center; gap: 8px">
+      <h2 id="map-title" style="flex: 1; margin: 0; font-size: 18px; font-weight: 700">Day 2 문항 지도</h2>
+      <a class="icon-btn" href="Question.dc.html" aria-label="닫기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </a>
+    </div>
+    <ul aria-label="표시 설명" style="display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 13px; color: #5A645E">
+      <li style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #1D7A43"></span>맞힘</li>
+      <li style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #B42318"></span>틀림</li>
+      <li style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #ECEEEC; box-shadow: inset 0 0 0 1px #C9CFCB"></span>안 풂</li>
+      <li style="display: inline-flex; align-items: center; gap: 6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#C2410C" stroke="#C2410C" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg>깃발
+      </li>
+    </ul>
+
+    <div style="flex: 1; overflow: auto; margin-top: 12px">
+      <sc-for list="{{sections}}" as="s" hint-placeholder-count="2">
+        <div style="margin-bottom: 18px">
+          <h3 style="margin: 0; font-size: 15px; font-weight: 700">{{s.title}}</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 10px">
+            <a class="link" href="Question.dc.html">{{s.lesson}}</a>
+            <a class="link" href="Question.dc.html">{{s.guided}}</a>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+            <sc-for list="{{s.cells}}" as="c" hint-placeholder-count="15">
+              <a class="cell" href="Question.dc.html" aria-label="{{c.aria}}" style="{{c.style}}">
+                {{c.n}}
+                <sc-if value="{{c.flag}}" hint-placeholder-val="{{ false }}">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#C2410C" stroke="#C2410C" stroke-width="2" stroke-linejoin="round" aria-hidden="true" style="position: absolute; top: 4px; right: 4px"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg>
+                </sc-if>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <a href="Result.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 12px; border: 1px solid #DCE2DD; color: #18201B; font-size: 15px; font-weight: 500; text-decoration: none">지금까지 결과 보기</a>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const styles = {
+      ok: 'background: #1D7A43; color: #FFFFFF',
+      bad: 'background: #B42318; color: #FFFFFF; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #18201B',
+      todo: 'background: #ECEEEC; color: #4D5550; box-shadow: inset 0 0 0 1px #C9CFCB'
+    };
+    const words = { ok: '맞힘', bad: '틀림 · 지금 보는 문항', todo: '안 풂' };
+    const cell = (n, state, flag) => ({ n, flag: !!flag, style: styles[state], aria: n + '번 ' + words[state] + (flag ? ' · 깃발' : '') });
+    const rc = [cell(1, 'ok'), cell(2, 'ok'), cell(3, 'ok', true), cell(4, 'bad')];
+    for (let n = 5; n <= 15; n++) rc.push(cell(n, 'todo'));
+    const lc = [];
+    for (let n = 16; n <= 25; n++) lc.push(cell(n, 'todo'));
+    return {
+      sections: [
+        { title: 'RC · 형용사·부사 자리 (Part 5)', lesson: '개념 3장', guided: '따라 풀기 2문제', cells: rc },
+        { title: 'LC · Where 의문문 (Part 2)', lesson: '개념 1장', guided: '따라 풀기 1문제', cells: lc }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

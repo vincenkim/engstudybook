@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>카드 암기 앞면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2556C4}a:hover{color:#1A3F94}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:56px;padding:0 18px;border-radius:14px;border:1px solid #DCE2DD;background:#FFFFFF;color:#18201B;font:inherit;font-size:16px;font-weight:500;text-decoration:none;box-sizing:border-box;cursor:pointer}
+.btn:hover{border-color:#A9B3AC;color:#18201B}
+.btn.primary{background:#2556C4;border-color:#2556C4;color:#FFFFFF;font-weight:700}
+.btn.primary:hover{background:#1A3F94;color:#FFFFFF}
+.icon-btn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;border:0;background:transparent;color:#18201B;cursor:pointer;text-decoration:none}
+.icon-btn:hover{background:#ECEEEC;color:#18201B}
+.seg{min-height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;font:inherit;font-size:13px;color:#5A645E;cursor:pointer}
+.seg[aria-pressed="true"]{background:#FFFFFF;color:#18201B;font-weight:700;box-shadow:0 1px 2px rgba(24,32,27,.12)}
+.rate{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:68px;border-radius:14px;border:0;font:inherit;cursor:pointer}
+.rate:hover{filter:brightness(0.96)}
+.pos{display:inline-block;min-width:24px;margin-right:8px;padding:1px 6px;border-radius:6px;background:#ECEEEC;font-size:13px;font-weight:700;text-align:center;color:#4D5550}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F6F4; color: #18201B; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <header style="position: absolute; top: 0; left: 0; right: 0">
+    <div style="height: 56px; display: flex; align-items: center; gap: 2px; padding: 4px 6px 0">
+      <a class="icon-btn" href="WordList.dc.html" aria-label="그만하고 목록으로">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </a>
+      <div style="flex: 1; min-width: 0; font-size: 15px; font-weight: 700">Week 1 · Day 1 카드</div>
+      <span style="padding-right: 12px; font-size: 14px; color: #5A645E">{{countText}}</span>
+    </div>
+    <div style="height: 4px; margin: 4px 16px 0; border-radius: 2px; background: #DCE2DD; overflow: hidden"><span style="display: block; height: 100%; width: {{progress}}; background: #2556C4"></span></div>
+  </header>
+
+  <sc-if value="{{inSession}}" hint-placeholder-val="{{ true }}">
+    <div style="position: absolute; top: 76px; left: 0; right: 0; display: flex; justify-content: center">
+      <div role="group" aria-label="카드 방향" style="display: inline-flex; padding: 3px; border-radius: 10px; background: #E7EAE7">
+        <button class="seg" type="button" aria-pressed="true">영어 → 뜻</button>
+        <button class="seg" type="button" aria-pressed="false">뜻 → 영어</button>
+      </div>
+    </div>
+
+    <section aria-live="polite" style="position: absolute; top: 132px; left: 16px; right: 16px; height: 420px; box-sizing: border-box; padding: 20px; background: #FFFFFF; border: 1px solid #DCE2DD; border-radius: 20px; box-shadow: 0 6px 20px rgba(24, 32, 27, 0.06); display: flex; flex-direction: column">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700; {{card.lastStyle}}">지난 평가 · {{card.last}}</span>
+        <button class="icon-btn" type="button" aria-label="{{card.speakAria}}" style="color: #2556C4">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 5a10 10 0 0 1 0 14"></path></svg>
+        </button>
+      </div>
+      <sc-if value="{{isFront}}" hint-placeholder-val="{{ true }}">
+        <button type="button" onClick="{{flip}}" aria-label="카드 뒤집어 뜻 보기" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 0; background: transparent; font: inherit; color: #18201B; cursor: pointer">
+          <span lang="en" style="font-size: 36px; font-weight: 700; letter-spacing: -0.5px">{{card.word}}</span>
+          <span lang="en" style="font-size: 16px; color: #5A645E">{{card.ipa}}</span>
+          <span style="margin-top: 24px; font-size: 13px; color: #5A645E">카드를 누르면 뜻이 보여요</span>
+        </button>
+      </sc-if>
+      <sc-if value="{{isBack}}" hint-placeholder-val="{{ false }}">
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 0 4px">
+          <span lang="en" style="font-size: 26px; font-weight: 700">{{card.word}}</span>
+          <span lang="en" style="font-size: 14px; color: #5A645E">{{card.ipa}}</span>
+          <div style="margin-top: 18px; display: grid; gap: 10px">
+            <sc-for list="{{card.senses}}" as="s" hint-placeholder-count="2">
+              <p style="margin: 0; font-size: 19px; line-height: 1.5"><span class="pos">{{s.pos}}</span>{{s.text}}</p>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </section>
+
+    <div style="position: absolute; left: 16px; right: 16px; bottom: 28px">
+      <sc-if value="{{isFront}}" hint-placeholder-val="{{ true }}">
+        <button class="btn primary" type="button" onClick="{{flip}}" style="width: 100%">뜻 보기</button>
+      </sc-if>
+      <sc-if value="{{isBack}}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 0 0 10px; text-align: center; font-size: 13px; color: #5A645E">‘처음’을 고르면 이번 세션 끝에 한 번 더 나와요</p>
+        <div role="group" aria-label="이 단어 평가" style="display: flex; gap: 8px">
+          <button class="rate" type="button" onClick="{{rateNew}}" style="background: #D8EEC9; color: #24521A"><span style="font-size: 16px; font-weight: 700">처음</span><span style="font-size: 12px">다시 볼래요</span></button>
+          <button class="rate" type="button" onClick="{{rateUnsure}}" style="background: #F1E0C2; color: #5C4318"><span style="font-size: 16px; font-weight: 700">애매</span><span style="font-size: 12px">헷갈려요</span></button>
+          <button class="rate" type="button" onClick="{{rateDone}}" style="background: #FFF2A8; color: #4D4100"><span style="font-size: 16px; font-weight: 700">완벽</span><span style="font-size: 12px">알아요</span></button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{finished}}" hint-placeholder-val="{{ false }}">
+    <section aria-live="polite" style="position: absolute; top: 100px; left: 16px; right: 16px; padding: 24px 20px; background: #FFFFFF; border: 1px solid #DCE2DD; border-radius: 20px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700">이번 세트 끝</h2>
+      <p style="margin: 6px 0 0; font-size: 15px; color: #5A645E">카드 {{total}}개를 봤어요</p>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 18px">
+        <div style="padding: 12px; border-radius: 12px; background: #D8EEC9; color: #24521A; text-align: center"><div style="font-size: 13px; font-weight: 700">처음</div><div style="font-size: 24px; font-weight: 700">{{sum.fresh}}</div></div>
+        <div style="padding: 12px; border-radius: 12px; background: #F1E0C2; color: #5C4318; text-align: center"><div style="font-size: 13px; font-weight: 700">애매</div><div style="font-size: 24px; font-weight: 700">{{sum.unsure}}</div></div>
+        <div style="padding: 12px; border-radius: 12px; background: #FFF2A8; color: #4D4100; text-align: center"><div style="font-size: 13px; font-weight: 700">완벽</div><div style="font-size: 24px; font-weight: 700">{{sum.done}}</div></div>
+      </div>
+      <button class="btn primary" type="button" onClick="{{restart}}" style="width: 100%; margin-top: 20px">처음·애매만 한 번 더</button>
+      <a class="btn" href="WordList.dc.html" style="width: 100%; margin-top: 8px">목록으로</a>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { index: 0, flipped: false, results: [] };
+  }
+  renderVals() {
+    const lastStyles = {
+      '처음': 'background: #D8EEC9; color: #24521A',
+      '애매': 'background: #F1E0C2; color: #5C4318'
+    };
+    const deck = [
+      { word: 'characteristic', ipa: '[kæ̀riktərístik]', last: '처음', senses: [{ pos: '명', text: '특성, 특색' }, { pos: '형', text: '특유의, 독특한' }] },
+      { word: 'compilation', ipa: '[kɑ̀mpəléiʃən]', last: '처음', senses: [{ pos: '명', text: '편집, 편찬, 모음집' }] },
+      { word: 'confidence', ipa: '[kɑ́nfədəns]', last: '애매', senses: [{ pos: '명', text: '자신감, 확신' }] },
+      { word: 'conscious', ipa: '[kɑ́nʃəs]', last: '처음', senses: [{ pos: '형', text: '의식하고 있는, 자각하는 (be conscious of)' }] }
+    ];
+    const { index, flipped, results } = this.state;
+    const finished = index >= deck.length;
+    const card = finished ? deck[0] : deck[index];
+    const rate = value => () => this.setState({ index: index + 1, flipped: false, results: [...results, value] });
+    const count = v => results.filter(r => r === v).length;
+    return {
+      inSession: !finished,
+      finished,
+      isFront: !flipped,
+      isBack: flipped,
+      card: { ...card, lastStyle: lastStyles[card.last], speakAria: card.word + ' 발음 듣기' },
+      countText: (finished ? deck.length : index + 1) + ' / ' + deck.length,
+      progress: Math.round((finished ? deck.length : index) / deck.length * 100) + '%',
+      total: deck.length,
+      sum: { fresh: count('처음'), unsure: count('애매'), done: count('완벽') },
+      flip: () => this.setState({ flipped: true }),
+      rateNew: rate('처음'),
+      rateUnsure: rate('애매'),
+      rateDone: rate('완벽'),
+      restart: () => this.setState({ index: 0, flipped: false, results: [] })
+    };
+  }
+}
+</script>
+</body>
+</html>

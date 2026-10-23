@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>단어 목록</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2556C4}a:hover{color:#1A3F94}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:52px;padding:0 18px;border-radius:12px;border:1px solid #DCE2DD;background:#FFFFFF;color:#18201B;font:inherit;font-size:16px;font-weight:500;text-decoration:none;box-sizing:border-box;cursor:pointer}
+.btn.primary{background:#2556C4;border-color:#2556C4;color:#FFFFFF;font-weight:700}
+.btn.primary:hover{background:#1A3F94;color:#FFFFFF}
+.icon-btn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;border:0;background:transparent;color:#18201B;cursor:pointer;text-decoration:none}
+.icon-btn:hover{background:#ECEEEC;color:#18201B}
+.seg{flex:1;min-height:40px;border:0;border-radius:8px;background:transparent;font:inherit;font-size:14px;color:#5A645E;cursor:pointer}
+.seg[aria-pressed="true"]{background:#FFFFFF;color:#18201B;font-weight:700;box-shadow:0 1px 2px rgba(24,32,27,.12)}
+.filter{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #DCE2DD;background:#FFFFFF;font:inherit;font-size:13px;font-weight:500;color:#18201B;cursor:pointer;white-space:nowrap}
+.filter[aria-pressed="true"]{background:#18201B;border-color:#18201B;color:#FFFFFF;font-weight:700}
+.status{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:60px;min-height:36px;padding:0 10px;border-radius:999px;border:0;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.cover{display:flex;align-items:center;width:100%;min-height:36px;padding:0 12px;border-radius:8px;border:1px dashed #A9B3AC;background:#F5F6F4;font:inherit;font-size:13px;color:#5A645E;text-align:left;cursor:pointer;box-sizing:border-box}
+.cover:hover{border-color:#2556C4;color:#1A3F94}
+.pos{display:inline-block;min-width:22px;margin-right:6px;padding:0 4px;border-radius:4px;background:#ECEEEC;font-size:12px;font-weight:700;text-align:center;color:#4D5550}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F5F6F4; color: #18201B; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <header style="position: absolute; top: 0; left: 0; right: 0; background: #F5F6F4">
+    <div style="height: 56px; display: flex; align-items: center; gap: 2px; padding: 4px 6px 0">
+      <a class="icon-btn" href="Wordbook.dc.html" aria-label="단어장으로 돌아가기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+      </a>
+      <div style="flex: 1; min-width: 0">
+        <div style="font-size: 16px; font-weight: 700">Week 1 · Day 1</div>
+        <div style="font-size: 12px; color: #5A645E">50단어 · 줄을 눌러 하나씩 확인</div>
+      </div>
+    </div>
+    <div role="group" aria-label="가리기" style="display: flex; gap: 4px; margin: 4px 16px 0; padding: 4px; border-radius: 12px; background: #E7EAE7">
+      <button class="seg" type="button" aria-pressed="{{modeAll}}" onClick="{{setAll}}">다 보기</button>
+      <button class="seg" type="button" aria-pressed="{{modeMeaning}}" onClick="{{setMeaning}}">뜻 가리기</button>
+      <button class="seg" type="button" aria-pressed="{{modeWord}}" onClick="{{setWord}}">단어 가리기</button>
+    </div>
+    <div role="group" aria-label="상태로 거르기" style="display: flex; gap: 6px; padding: 10px 16px 10px; overflow-x: auto">
+      <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
+        <button class="filter" type="button" aria-pressed="{{f.on}}" onClick="{{f.pick}}">{{f.label}}</button>
+      </sc-for>
+    </div>
+  </header>
+
+  <main style="position: absolute; inset: 160px 0 84px 0; overflow: auto; padding: 0 16px 16px">
+    <ol aria-label="단어" style="margin: 0; padding: 0; list-style: none; background: #FFFFFF; border: 1px solid #DCE2DD; border-radius: 16px; overflow: hidden">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+        <li style="display: flex; gap: 10px; padding: 12px 12px 12px 14px; border-top: 1px solid #ECEEEC">
+          <span style="width: 20px; padding-top: 4px; font-size: 12px; color: #5A645E; text-align: right">{{r.n}}</span>
+          <div style="flex: 1; min-width: 0">
+            <sc-if value="{{r.showWord}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 8px">
+                <span lang="en" style="font-size: 17px; font-weight: 700">{{r.word}}</span>
+                <span lang="en" style="font-size: 13px; color: #5A645E">{{r.ipa}}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{r.hideWord}}" hint-placeholder-val="{{ false }}">
+              <button class="cover" type="button" onClick="{{r.reveal}}">눌러서 단어 보기</button>
+            </sc-if>
+            <sc-if value="{{r.showMeaning}}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 4px; font-size: 14px; line-height: 1.6">
+                <sc-for list="{{r.senses}}" as="s" hint-placeholder-count="1">
+                  <div><span class="pos">{{s.pos}}</span>{{s.text}}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{r.hideMeaning}}" hint-placeholder-val="{{ true }}">
+              <button class="cover" type="button" onClick="{{r.reveal}}" style="margin-top: 6px">눌러서 뜻 보기</button>
+            </sc-if>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+            <button class="status" type="button" aria-label="{{r.statusAria}}" onClick="{{r.cycle}}" style="{{r.statusStyle}}">{{r.status}}</button>
+            <button class="icon-btn" type="button" aria-label="{{r.speakAria}}" style="width: 40px; height: 40px; color: #5A645E">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 5a10 10 0 0 1 0 14"></path></svg>
+            </button>
+          </div>
+        </li>
+      </sc-for>
+    </ol>
+  </main>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 10px 16px 22px; background: #FFFFFF; border-top: 1px solid #DCE2DD">
+    <a class="btn primary" href="CardFront.dc.html" style="width: 100%">카드로 외우기 · 처음·애매 42개</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mode: 'meaning',
+      filter: 'all',
+      revealed: { 3: true },
+      status: { 1: '애매', 2: '완벽', 3: '애매', 4: '애매', 5: '애매', 6: '애매', 7: '완벽', 8: '처음', 9: '처음', 10: '처음' }
+    };
+  }
+  renderVals() {
+    const words = [
+      { n: 1, word: 'additional', ipa: '[əˈdɪʃənl]', senses: [{ pos: '형', text: '추가의, 부가의' }] },
+      { n: 2, word: 'applicant', ipa: '[ǽplikənt]', senses: [{ pos: '명', text: '지원자, 신청자' }] },
+      { n: 3, word: 'attend', ipa: '[əˈtend]', senses: [{ pos: '타', text: '참석하다' }] },
+      { n: 4, word: 'available', ipa: '[əˈveɪləbl]', senses: [{ pos: '형', text: '이용할 수 있는, 유효한, 시간이 있는' }] },
+      { n: 5, word: 'beforehand', ipa: '[bɪˈfɔːrhænd]', senses: [{ pos: '부', text: '사전에, 미리' }] },
+      { n: 6, word: 'brief', ipa: '[briːf]', senses: [{ pos: '형', text: '짧은, 잠시의, 간결한' }, { pos: '타', text: '~에게 ~에 대해 간략하게 말하다' }] },
+      { n: 7, word: 'candidate', ipa: '[kǽndidèit, -dət]', senses: [{ pos: '명', text: '후보자, 지원자' }] },
+      { n: 8, word: 'characteristic', ipa: '[kæ̀riktərístik]', senses: [{ pos: '명', text: '특성, 특색' }, { pos: '형', text: '특유의, 독특한' }] },
+      { n: 9, word: 'compilation', ipa: '[kɑ̀mpəléiʃən]', senses: [{ pos: '명', text: '편집, 편찬, 모음집' }] },
+      { n: 10, word: 'comprehensive', ipa: '[kɑ̀mprihénsiv]', senses: [{ pos: '형', text: '포괄적인, 종합적인, 광범위한' }] }
+    ];
+    const styles = {
+      '처음': 'background: #D8EEC9; color: #24521A',
+      '애매': 'background: #F1E0C2; color: #5C4318',
+      '완벽': 'background: #FFF2A8; color: #4D4100'
+    };
+    const order = ['처음', '애매', '완벽'];
+    const { mode, filter, revealed, status } = this.state;
+    const rows = words
+      .filter(w => filter === 'all' || status[w.n] === filter)
+      .map(w => {
+        const open = !!revealed[w.n];
+        const showWord = mode !== 'word' || open;
+        const showMeaning = mode !== 'meaning' || open;
+        const current = status[w.n];
+        return {
+          ...w,
+          showWord, hideWord: !showWord,
+          showMeaning, hideMeaning: !showMeaning,
+          status: current,
+          statusStyle: styles[current],
+          statusAria: '상태 ' + current + ', 눌러서 바꾸기',
+          speakAria: w.word + ' 발음 듣기',
+          reveal: () => this.setState({ revealed: { ...revealed, [w.n]: true } }),
+          cycle: () => this.setState({ status: { ...status, [w.n]: order[(order.indexOf(current) + 1) % 3] } })
+        };
+      });
+    const counts = { all: 50, '처음': 25, '애매': 17, '완벽': 8 };
+    const filters = [['all', '전체'], ['처음', '처음'], ['애매', '애매'], ['완벽', '완벽']].map(([key, name]) => ({
+      label: name + ' ' + counts[key],
+      on: filter === key ? 'true' : 'false',
+      pick: () => this.setState({ filter: key })
+    }));
+    const setMode = m => () => this.setState({ mode: m, revealed: {} });
+    return {
+      rows, filters,
+      modeAll: mode === 'all' ? 'true' : 'false',
+      modeMeaning: mode === 'meaning' ? 'true' : 'false',
+      modeWord: mode === 'word' ? 'true' : 'false',
+      setAll: setMode('all'), setMeaning: setMode('meaning'), setWord: setMode('word')
+    };
+  }
+}
+</script>
+</body>
+</html>
