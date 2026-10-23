@@ -214,7 +214,7 @@ describe('progress store', () => {
 		replaceProgress(structuredClone(exported));
 		const file = new File([JSON.stringify(progress)], 'toeic-basic-progress.json');
 		replaceProgress(defaultProgress());
-		replaceProgress((await readProgressFile(file))!);
+		replaceProgress((await readProgressFile(file))!.progress);
 		expect(progress).toEqual(exported);
 	});
 

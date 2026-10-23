@@ -18,6 +18,12 @@ import {
 	type Theme
 } from './model';
 import { pickInReview } from './review';
+import {
+	parseWordsRecord,
+	replaceWords,
+	wordsRecord,
+	type WordsRecord
+} from './words-store.svelte';
 
 const storageKey = 'toeicBasic.v2';
 const legacyKey = 'toeicBasic.v1';
@@ -141,8 +147,21 @@ export function setTheme(theme: Theme) {
 	save();
 }
 
+/** A backup: the progress record, and the word record kept under its own key (KTD4). */
+export interface Backup {
+	progress: Progress;
+	/** Missing in files saved before the wordbook; the words then stay as they are (R17). */
+	words?: WordsRecord;
+}
+
+/** The exported file: the progress record with the word record beside it. */
+export const backupOf = () => ({
+	...$state.snapshot(progress),
+	words: $state.snapshot(wordsRecord)
+});
+
 export function exportProgress() {
-	const blob = new Blob([JSON.stringify($state.snapshot(progress))], { type: 'application/json' });
+	const blob = new Blob([JSON.stringify(backupOf())], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
 	const link = Object.assign(document.createElement('a'), {
 		href: url,
@@ -153,17 +172,27 @@ export function exportProgress() {
 }
 
 /** Validates an exported progress file (v2, or v1 from the original app); null when unusable. */
-export async function readProgressFile(file: File): Promise<Progress | null> {
+export async function readProgressFile(file: File): Promise<Backup | null> {
 	try {
-		return parseProgress(JSON.parse(await file.text()), questionsOfDay);
+		const raw = JSON.parse(await file.text());
+		const read = parseProgress(raw, questionsOfDay);
+		if (!read) return null;
+		return { progress: read, words: parseWordsRecord(raw?.words) ?? undefined };
 	} catch {
 		return null;
 	}
 }
 
+/** Replaces the progress record; a file saved before themes keeps the theme chosen here. */
 export function replaceProgress(next: Progress) {
-	progress.settings = next.settings;
+	progress.settings = { ...next.settings, theme: next.settings.theme ?? progress.settings.theme };
 	progress.lastDay = next.lastDay;
 	progress.days = next.days;
 	save();
+}
+
+/** Restores a backup; the word record is replaced only when the file has one (R17). */
+export function restoreBackup({ progress: next, words }: Backup) {
+	replaceProgress(next);
+	if (words) replaceWords(words);
 }
