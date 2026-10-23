@@ -8,8 +8,7 @@ export default [
 		ipa: '[əbάliʃ]',
 		groups: [
 			{ pos: '타', senses: [{ text: '폐지하다' }, { text: '없애다' }, { text: '철폐하다' }] }
-		],
-		initial: 'new'
+		]
 	},
 	{
 		id: 'w2d5-02',
@@ -18,8 +17,7 @@ export default [
 		ipa: '[æksélərèit, əksélərèit]',
 		groups: [
 			{ pos: '타', senses: [{ text: '가속하다' }, { text: '촉진시키다' }, { text: '단축하다' }] }
-		],
-		initial: 'new'
+		]
 	},
 	{
 		id: 'w2d5-03',
@@ -31,16 +29,14 @@ export default [
 				pos: '타',
 				senses: [{ text: '(재산, 권리를) 획득하다' }, { text: '인수하다' }, { text: '얻다' }]
 			}
-		],
-		initial: 'new'
+		]
 	},
 	{
 		id: 'w2d5-04',
 		no: 4,
 		word: 'allegedly',
 		ipa: '[əlédʒidli]',
-		groups: [{ pos: '부', senses: [{ text: '주장에 의하면' }, { text: '전해지는 바에 의하면' }] }],
-		initial: 'new'
+		groups: [{ pos: '부', senses: [{ text: '주장에 의하면' }, { text: '전해지는 바에 의하면' }] }]
 	},
 	{
 		id: 'w2d5-05',
@@ -52,16 +48,14 @@ export default [
 				pos: '명',
 				senses: [{ text: '별관' }, { text: '부가물' }, { text: '부속 문서' }, { text: '부록' }]
 			}
-		],
-		initial: 'new'
+		]
 	},
 	{
 		id: 'w2d5-06',
 		no: 6,
 		word: 'apologize',
 		ipa: '[əpάlədʒàiz]',
-		groups: [{ pos: '자', senses: [{ text: '사과하다' }, { text: '사죄하다 (for)' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '자', senses: [{ text: '사과하다' }, { text: '사죄하다 (for)' }] }]
 	},
 	{
 		id: 'w2d5-07',
@@ -78,16 +72,14 @@ export default [
 					{ text: '기초 (on a + 형 + basis)' }
 				]
 			}
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-08',
 		no: 8,
 		word: 'blame',
 		ipa: '[bleim]',
-		groups: [{ pos: '타', senses: [{ text: '비난하다' }, { text: '~의 탓으로 돌리다' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '타', senses: [{ text: '비난하다' }, { text: '~의 탓으로 돌리다' }] }]
 	},
 	{
 		id: 'w2d5-09',
@@ -97,8 +89,7 @@ export default [
 		groups: [
 			{ pos: '형', senses: [{ text: '뚜렷한' }, { text: '명확한' }] },
 			{ pos: '타', senses: [{ text: '치우다' }] }
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-10',
@@ -108,32 +99,28 @@ export default [
 		groups: [
 			{ pos: '명', senses: [{ text: '타협' }, { text: '절충안' }] },
 			{ pos: '타', senses: [{ text: '타협시키다' }] }
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-11',
 		no: 11,
 		word: 'corrosion',
 		ipa: '[kəróuʒən]',
-		groups: [{ pos: '명', senses: [{ text: '부식(작용)' }, { text: '녹' }, { text: '침식' }] }],
-		initial: 'new'
+		groups: [{ pos: '명', senses: [{ text: '부식(작용)' }, { text: '녹' }, { text: '침식' }] }]
 	},
 	{
 		id: 'w2d5-12',
 		no: 12,
 		word: 'donate',
 		ipa: '[dóuneit]',
-		groups: [{ pos: '타', senses: [{ text: '기부(기증)하다' }, { text: '주다' }] }],
-		initial: 'known'
+		groups: [{ pos: '타', senses: [{ text: '기부(기증)하다' }, { text: '주다' }] }]
 	},
 	{
 		id: 'w2d5-13',
 		no: 13,
 		word: 'engage',
 		ipa: '[ingéidʒ]',
-		groups: [{ pos: '자', senses: [{ text: '~에 연관되다' }, { text: '관여되다 (in)' }] }],
-		initial: 'new'
+		groups: [{ pos: '자', senses: [{ text: '~에 연관되다' }, { text: '관여되다 (in)' }] }]
 	},
 	{
 		id: 'w2d5-14',
@@ -145,8 +132,7 @@ export default [
 				pos: '형',
 				senses: [{ text: '거센' }, { text: '치열한' }, { text: '난폭한' }, { text: '사나운' }]
 			}
-		],
-		initial: 'new'
+		]
 	},
 	{
 		id: 'w2d5-15',
@@ -156,8 +142,7 @@ export default [
 		groups: [
 			{ pos: '명', senses: [{ text: '벌금' }] },
 			{ pos: '형', senses: [{ text: '좋은' }] }
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-16',
@@ -167,32 +152,28 @@ export default [
 		groups: [
 			{ pos: '명', senses: [{ text: '힘(세력)' }, { text: '영향력' }, { text: '지배력' }] },
 			{ pos: '타', senses: [{ text: '강요하다' }] }
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-17',
 		no: 17,
 		word: 'highly',
 		ipa: '[háili]',
-		groups: [{ pos: '부', senses: [{ text: '매우' }] }],
-		initial: 'known'
+		groups: [{ pos: '부', senses: [{ text: '매우' }] }]
 	},
 	{
 		id: 'w2d5-18',
 		no: 18,
 		word: 'housing',
 		ipa: '[háuziŋ]',
-		groups: [{ pos: '명', senses: [{ text: '주택 공급' }, { text: '주거' }] }],
-		initial: 'known'
+		groups: [{ pos: '명', senses: [{ text: '주택 공급' }, { text: '주거' }] }]
 	},
 	{
 		id: 'w2d5-19',
 		no: 19,
 		word: 'incompetent',
 		ipa: '[inkάmpətənt]',
-		groups: [{ pos: '형', senses: [{ text: '무능한' }, { text: '서투른' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '형', senses: [{ text: '무능한' }, { text: '서투른' }] }]
 	},
 	{
 		id: 'w2d5-20',
@@ -209,16 +190,14 @@ export default [
 					{ text: '가담하다' }
 				]
 			}
-		],
-		initial: 'new'
+		]
 	},
 	{
 		id: 'w2d5-21',
 		no: 21,
 		word: 'inflation',
 		ipa: '[infléiʃən]',
-		groups: [{ pos: '명', senses: [{ text: '물가 인상(상승)' }] }],
-		initial: 'new'
+		groups: [{ pos: '명', senses: [{ text: '물가 인상(상승)' }] }]
 	},
 	{
 		id: 'w2d5-22',
@@ -227,8 +206,7 @@ export default [
 		ipa: '[ínvəntɔ̀ːri]',
 		groups: [
 			{ pos: '명', senses: [{ text: '(상품, 재산) 목록' }, { text: '품목' }, { text: '재고품' }] }
-		],
-		initial: 'known'
+		]
 	},
 	{
 		id: 'w2d5-23',
@@ -240,16 +218,14 @@ export default [
 				pos: '타',
 				senses: [{ text: '(사건 등에) 연루되다' }, { text: '관련되다' }, { text: '참여하다' }]
 			}
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-24',
 		no: 24,
 		word: 'labor',
 		ipa: '[léibər]',
-		groups: [{ pos: '명', senses: [{ text: '노동(자)' }, { text: '근로' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '노동(자)' }, { text: '근로' }] }]
 	},
 	{
 		id: 'w2d5-25',
@@ -259,16 +235,14 @@ export default [
 		groups: [
 			{ pos: '명', senses: [{ text: '지연' }, { text: '지체' }, { text: '처짐' }] },
 			{ pos: '자', senses: [{ text: '처지다' }, { text: '뒤떨어지다 (behind)' }] }
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-26',
 		no: 26,
 		word: 'legislation',
 		ipa: '[lèdʒisléiʃən]',
-		groups: [{ pos: '명', senses: [{ text: '법안' }, { text: '법률(제정)' }, { text: '입법' }] }],
-		initial: 'new'
+		groups: [{ pos: '명', senses: [{ text: '법안' }, { text: '법률(제정)' }, { text: '입법' }] }]
 	},
 	{
 		id: 'w2d5-27',
@@ -278,8 +252,7 @@ export default [
 		groups: [
 			{ pos: '타', senses: [{ text: '작게하다' }, { text: '줄이다' }, { text: '감소하다' }] },
 			{ pos: '자', senses: [{ text: '작아지다' }, { text: '줄다' }] }
-		],
-		initial: 'new'
+		]
 	},
 	{
 		id: 'w2d5-28',
@@ -288,16 +261,14 @@ export default [
 		ipa: '[mӕnidʒíəriəl]',
 		groups: [
 			{ pos: '형', senses: [{ text: '경영상의' }, { text: '경영자의' }, { text: '관리(인)의' }] }
-		],
-		initial: 'new'
+		]
 	},
 	{
 		id: 'w2d5-29',
 		no: 29,
 		word: 'monopoly',
 		ipa: '[mənάpəli]',
-		groups: [{ pos: '명', senses: [{ text: '독점' }, { text: '전매' }, { text: '독주' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '독점' }, { text: '전매' }, { text: '독주' }] }]
 	},
 	{
 		id: 'w2d5-30',
@@ -307,56 +278,49 @@ export default [
 		groups: [
 			{ pos: '형', senses: [{ text: '공무상의' }, { text: '직무상의' }] },
 			{ pos: '명', senses: [{ text: '공무원' }, { text: '임원' }, { text: '관리' }] }
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-31',
 		no: 31,
 		word: 'overprice',
 		ipa: '[ouˌvərpraiˈs]',
-		groups: [{ pos: '타', senses: [{ text: '~에 너무 비싼 값을 매기다' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '타', senses: [{ text: '~에 너무 비싼 값을 매기다' }] }]
 	},
 	{
 		id: 'w2d5-32',
 		no: 32,
 		word: 'oversee',
 		ipa: '[ouˈvərsiˌ]',
-		groups: [{ pos: '타', senses: [{ text: '감독하다' }, { text: '감시하다' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '타', senses: [{ text: '감독하다' }, { text: '감시하다' }] }]
 	},
 	{
 		id: 'w2d5-33',
 		no: 33,
 		word: 'possible',
 		ipa: '[pάsəbl]',
-		groups: [{ pos: '형', senses: [{ text: '가능한' }, { text: '할 수 있는' }] }],
-		initial: 'known'
+		groups: [{ pos: '형', senses: [{ text: '가능한' }, { text: '할 수 있는' }] }]
 	},
 	{
 		id: 'w2d5-34',
 		no: 34,
 		word: 'press',
 		ipa: '[pres]',
-		groups: [{ pos: '명', senses: [{ text: '언론' }, { text: '보도' }, { text: '기자단' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '언론' }, { text: '보도' }, { text: '기자단' }] }]
 	},
 	{
 		id: 'w2d5-35',
 		no: 35,
 		word: 'procedure',
 		ipa: '[prəsíːdʒər]',
-		groups: [{ pos: '명', senses: [{ text: '순서' }, { text: '절차' }, { text: '처리 방법' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '순서' }, { text: '절차' }, { text: '처리 방법' }] }]
 	},
 	{
 		id: 'w2d5-36',
 		no: 36,
 		word: 'prohibit',
 		ipa: '[prouhíbit]',
-		groups: [{ pos: '타', senses: [{ text: '금지하다' }, { text: '방해하다' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '타', senses: [{ text: '금지하다' }, { text: '방해하다' }] }]
 	},
 	{
 		id: 'w2d5-37',
@@ -368,32 +332,28 @@ export default [
 				pos: '명',
 				senses: [{ text: '요금' }, { text: '가격' }, { text: '비율' }, { text: '속도' }]
 			}
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-38',
 		no: 38,
 		word: 'refuse',
 		ipa: '[rifjúːz]',
-		groups: [{ pos: '타', senses: [{ text: '거부하다' }, { text: '거절하다 (to R)' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '타', senses: [{ text: '거부하다' }, { text: '거절하다 (to R)' }] }]
 	},
 	{
 		id: 'w2d5-39',
 		no: 39,
 		word: 'remainder',
 		ipa: '[riméindər]',
-		groups: [{ pos: '명', senses: [{ text: '나머지' }, { text: '잔여' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '나머지' }, { text: '잔여' }] }]
 	},
 	{
 		id: 'w2d5-40',
 		no: 40,
 		word: 'repeatedly',
 		ipa: '[ripíːtidli]',
-		groups: [{ pos: '부', senses: [{ text: '반복적으로' }, { text: '되풀이하여' }] }],
-		initial: 'new'
+		groups: [{ pos: '부', senses: [{ text: '반복적으로' }, { text: '되풀이하여' }] }]
 	},
 	{
 		id: 'w2d5-41',
@@ -405,24 +365,21 @@ export default [
 				pos: '타',
 				senses: [{ text: '해결하다' }, { text: '결심하다' }, { text: '대책을 마련하다' }]
 			}
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-42',
 		no: 42,
 		word: 'revenue',
 		ipa: '[révənjùː]',
-		groups: [{ pos: '명', senses: [{ text: '매출' }, { text: '수입' }, { text: '(총)수익' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '매출' }, { text: '수입' }, { text: '(총)수익' }] }]
 	},
 	{
 		id: 'w2d5-43',
 		no: 43,
 		word: 'settle',
 		ipa: '[sétl]',
-		groups: [{ pos: '타', senses: [{ text: '해결하다' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '타', senses: [{ text: '해결하다' }] }]
 	},
 	{
 		id: 'w2d5-44',
@@ -432,32 +389,28 @@ export default [
 		groups: [
 			{ pos: '명', senses: [{ text: '교대(근무)' }, { text: '전환' }] },
 			{ pos: '자', senses: [{ text: '바뀌다' }, { text: '전환하다' }] }
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-45',
 		no: 45,
 		word: 'solicit',
 		ipa: '[səlísit]',
-		groups: [{ pos: '타', senses: [{ text: '요청하다' }, { text: '모으다' }] }],
-		initial: 'new'
+		groups: [{ pos: '타', senses: [{ text: '요청하다' }, { text: '모으다' }] }]
 	},
 	{
 		id: 'w2d5-46',
 		no: 46,
 		word: 'stack',
 		ipa: '[stæk]',
-		groups: [{ pos: '명', senses: [{ text: '더미' }, { text: '한 무더기' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '더미' }, { text: '한 무더기' }] }]
 	},
 	{
 		id: 'w2d5-47',
 		no: 47,
 		word: 'strike',
 		ipa: '[straik]',
-		groups: [{ pos: '명', senses: [{ text: '파업 (on strike)' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '파업 (on strike)' }] }]
 	},
 	{
 		id: 'w2d5-48',
@@ -469,23 +422,20 @@ export default [
 				pos: '명',
 				senses: [{ text: '긴장' }, { text: '팽팽함' }, { text: '불안' }, { text: '긴박' }]
 			}
-		],
-		initial: 'unsure'
+		]
 	},
 	{
 		id: 'w2d5-49',
 		no: 49,
 		word: 'unused',
 		ipa: '[Λnjúːzd]',
-		groups: [{ pos: '형', senses: [{ text: '사용되지 않는' }, { text: '미사용의' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '형', senses: [{ text: '사용되지 않는' }, { text: '미사용의' }] }]
 	},
 	{
 		id: 'w2d5-50',
 		no: 50,
 		word: 'wage',
 		ipa: '[weidʒ]',
-		groups: [{ pos: '명', senses: [{ text: '임금' }, { text: '급여' }, { text: '소득' }] }],
-		initial: 'unsure'
+		groups: [{ pos: '명', senses: [{ text: '임금' }, { text: '급여' }, { text: '소득' }] }]
 	}
 ] satisfies WordDay;

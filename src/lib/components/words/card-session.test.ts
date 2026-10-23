@@ -73,7 +73,7 @@ describe('card session (KTD10)', () => {
 	it('shows a PDF word with its IPA and its senses by part of speech', () => {
 		expect(pdfCard(wordsOf('w1d1')[0])).toEqual({
 			key: 'w1d1-01',
-			initial: 'unsure',
+			initial: 'new',
 			star: false,
 			word: 'additional',
 			ipa: '[əˈdɪʃənl]',

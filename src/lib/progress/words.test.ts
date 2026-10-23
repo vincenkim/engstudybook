@@ -37,10 +37,16 @@ function rateDeck(entries: WordEntries, day: string, status: WordStatus, on = to
 }
 
 describe('status and schedule', () => {
-	it('reads a word without a record by its PDF status, outside the review (AE1)', () => {
+	it('reads a word without a record by the status it starts with, outside the review (AE1)', () => {
 		const words = [item('w1d1-03', 'unsure')];
 		expect(statusOf({}, words[0])).toBe('unsure');
 		expect(dueItems({}, words, today)).toEqual([]);
+	});
+
+	it('starts every PDF word 처음 until the learner changes it', () => {
+		const attend = pdfItem(wordsOf('w1d1')[2]);
+		expect(statusOf({}, attend)).toBe('new');
+		expect(statusOf({ [attend.key]: rated(undefined, 'known', today) }, attend)).toBe('known');
 	});
 
 	it('brings a word rated 처음 back the next day, not the same day (AE1)', () => {
@@ -151,7 +157,7 @@ describe('lists', () => {
 		const rows = days.flatMap((day) => day.items);
 		const overall = countStatuses({}, rows);
 		expect(Object.values(overall).reduce((sum, count) => sum + count, 0)).toBe(1000);
-		expect(overall).toEqual({ unseen: 2, new: 248, unsure: 603, known: 147 });
+		expect(overall).toEqual({ unseen: 0, new: 1000, unsure: 0, known: 0 });
 		const w3d3 = countStatuses({}, wordsOf('w3d3').map(pdfItem));
 		expect(Object.values(w3d3).reduce((sum, count) => sum + count, 0)).toBe(50);
 	});
@@ -165,13 +171,6 @@ describe('today’s word day', () => {
 	it('stays on the day opened last while its deck has words not rated yet', () => {
 		const entries = rateDeck({}, 'w1d1', 'known');
 		expect(todayWordDay(entries, 'w2d3', days)).toBe('w2d3');
-	});
-
-	// Regression: PDF 완벽 words never reach a deck, so counting them kept the day from moving on.
-	it('moves on once the deck of the day is rated, PDF 완벽 words left unrated', () => {
-		expect(wordsOf('w1d1').some((word) => word.initial === 'known')).toBe(true);
-		const entries = rateDeck({}, 'w1d1', 'unsure');
-		expect(todayWordDay(entries, 'w1d1', days)).toBe('w1d2');
 	});
 
 	it('takes the day with the most words not 완벽 once every deck is rated', () => {

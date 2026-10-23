@@ -22,7 +22,6 @@ const wordSchema = z.strictObject({
 	word: text,
 	ipa: text,
 	groups: z.array(posGroup).min(1),
-	initial: z.enum(wordStatuses),
 	star: z.literal(true).optional(),
 	/** The id of the earlier row when a Day repeats the last words of the Day before. */
 	same: wordId.optional()

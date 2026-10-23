@@ -51,7 +51,7 @@
 			{/each}
 		</ul>
 		<p class="mt-2.5 text-[13px] text-muted-foreground">
-			앱에서 바꾸기 전 상태는 PDF에 칠해 둔 색에서 가져왔어요.
+			모든 단어는 처음에서 시작해요. 상태는 목록이나 카드에서 바꿀 수 있어요.
 		</p>
 	</section>
 	<div class="mt-3 grid gap-3">

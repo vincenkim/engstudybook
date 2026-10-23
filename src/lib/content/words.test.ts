@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { wordDaySchema, wordStatuses } from './word-schema';
+import { wordDaySchema } from './word-schema';
 import { recordKey, wordById, wordDays, wordsOf, type Word } from './words';
 
 const rowsPerDay = [50, 50, 50, 49, 51, 52, 49, 52, 50, 50, 50, 51, 50, 51, 51, 51, 50, 50, 50, 49];
@@ -91,13 +91,10 @@ describe('repeated words', () => {
 		]);
 	});
 
-	it('keeps both rows identical, with the later Day circle as the first status', () => {
+	it('keeps both rows identical', () => {
 		for (const [later, earlier] of Object.entries(repeated)) {
 			const [a, b] = [wordById(earlier)!, wordById(later)!];
-			expect({ ...view(b), initial: b.initial }, later).toEqual({
-				...view(a),
-				initial: a.initial
-			});
+			expect(view(b), later).toEqual(view(a));
 			expect(a.same, earlier).toBeUndefined();
 		}
 	});
@@ -140,28 +137,6 @@ describe('PDF marks', () => {
 			sense('w2d2-07', '부피'),
 			sense('w2d2-09', '상자'),
 			sense('w2d2-10', '일반적인')
-		]);
-	});
-
-	it('takes the first status from the circles, counted by row and by unique word', () => {
-		const count = (words: Word[]) =>
-			Object.fromEntries(
-				wordStatuses.map((status) => [status, words.filter((w) => w.initial === status).length])
-			);
-		// The PDF circles 248 처음 · 608 애매 · 148 완벽 rows; 3 earlier repeats take the later 완벽.
-		expect(count(allWords)).toEqual({ unseen: 2, new: 248, unsure: 605, known: 151 });
-		expect(count(allWords.filter((word) => recordKey(word) === word.id))).toEqual({
-			unseen: 2,
-			new: 248,
-			unsure: 603,
-			known: 147
-		});
-	});
-
-	it('leaves only the 2 uncircled rows unseen', () => {
-		expect(allWords.filter((word) => word.initial === 'unseen').map((word) => word.id)).toEqual([
-			'w3d3-05',
-			'w3d3-06'
 		]);
 	});
 });

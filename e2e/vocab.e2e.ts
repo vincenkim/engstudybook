@@ -192,14 +192,17 @@ test('hides the vocabulary before an exam is graded', async ({ page }) => {
 test('starts the saved words’ cards with a word not seen yet', async ({ page }) => {
 	await seed(page, { words: { saved: { 'take leave': takeLeave, delay: delaySaved } } });
 	await page.goto('/words/saved');
-	// delay is 완벽 on the PDF, so only take leave is left to learn.
+	// delay starts 처음 like every PDF word; take leave, saved first, has not been seen.
 	const cards = page.getByRole('button', { name: /^카드로 외우기/ });
-	await expect(cards).toHaveText('카드로 외우기 · 외울 단어 1개');
+	await expect(cards).toHaveText('카드로 외우기 · 외울 단어 2개');
 	await cards.click();
 	await expect(heading(page)).toHaveText('담은 단어 카드');
 	await expect(page.getByRole('main')).toContainText('take leave');
 	await expect(page.getByRole('main')).toContainText('안 봄');
 
+	await page.keyboard.press('Space');
+	await page.keyboard.press('Digit3');
+	await expect(page.getByRole('main')).toContainText('delay');
 	await page.keyboard.press('Space');
 	await page.keyboard.press('Digit3');
 	await page.getByRole('main').getByRole('link', { name: '담은 단어로' }).click();

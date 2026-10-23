@@ -83,45 +83,45 @@ test('covers the meanings first and covers every row again when the mode changes
 test('moves a status on from its chip, keeps focus there and saves it', async ({ page }) => {
 	await page.goto('/words/w1d1');
 	const chip = statusChip(rows(page).first());
-	await expect(chip).toHaveAccessibleName('상태 애매, 눌러서 바꾸기');
+	await expect(chip).toHaveAccessibleName('상태 처음, 눌러서 바꾸기');
 	await chip.click();
 	await expect(chip).toBeFocused();
-	await expect(chip).toHaveAccessibleName('상태 완벽, 눌러서 바꾸기');
+	await expect(chip).toHaveAccessibleName('상태 애매, 눌러서 바꾸기');
 	await page.reload();
-	await expect(chip).toHaveAccessibleName('상태 완벽, 눌러서 바꾸기');
+	await expect(chip).toHaveAccessibleName('상태 애매, 눌러서 바꾸기');
 });
 
 test('keeps the rows of a filter while their status changes', async ({ page }) => {
 	await page.goto('/words/w1d1');
 	await expect(filters(page).getByRole('button')).toHaveText([
 		'전체 50',
-		'처음 25',
-		'애매 18',
-		'완벽 7',
+		'처음 50',
+		'애매 0',
+		'완벽 0',
 		'별표 3'
 	]);
-	await filters(page).getByRole('button', { name: '처음 25' }).click();
-	await expect(filters(page).getByRole('button', { name: '처음 25' })).toHaveAttribute(
+	await filters(page).getByRole('button', { name: '처음 50' }).click();
+	await expect(filters(page).getByRole('button', { name: '처음 50' })).toHaveAttribute(
 		'aria-pressed',
 		'true'
 	);
-	await expect(rows(page)).toHaveCount(25);
+	await expect(rows(page)).toHaveCount(50);
 	const chip = statusChip(rows(page).first());
 	await chip.click();
 	await chip.click();
 	await expect(chip).toHaveAccessibleName('상태 완벽, 눌러서 바꾸기');
-	await expect(rows(page)).toHaveCount(25);
+	await expect(rows(page)).toHaveCount(50);
 	await expect(filters(page).getByRole('button')).toHaveText([
 		'전체 50',
-		'처음 24',
-		'애매 18',
-		'완벽 8',
+		'처음 49',
+		'애매 0',
+		'완벽 1',
 		'별표 3'
 	]);
-	await expect(cardButton(page)).toHaveText('카드로 외우기 · 외울 단어 42개');
+	await expect(cardButton(page)).toHaveText('카드로 외우기 · 외울 단어 49개');
 });
 
-test('offers the star and 안 봄 filters only on Days that have such words', async ({ page }) => {
+test('offers the star and 안 봄 filters only on lists that have such words', async ({ page }) => {
 	await page.goto('/words/w1d1');
 	await filters(page).getByRole('button', { name: '별표 3' }).click();
 	await expect(rows(page)).toHaveCount(3);
@@ -137,11 +137,13 @@ test('offers the star and 안 봄 filters only on Days that have such words', as
 
 	await page.goto('/words/w1d4');
 	await expect(filters(page).getByRole('button', { name: /^(별표|안 봄)/ })).toHaveCount(0);
-	await page.goto('/words/w3d3');
-	await filters(page).getByRole('button', { name: '안 봄 2' }).click();
-	await expect(rows(page)).toHaveCount(2);
-	await expect(rows(page).first()).toContainText('balance');
-	await expect(rows(page).last()).toContainText('besides');
+	// Every PDF word starts 처음; a saved word the PDF lacks starts 안 봄.
+	const takeLeave = { word: 'take leave', meanings: ['휴가를 내다'], sources: ['d03-12'] };
+	await seedWords(page, { saved: { 'take leave': takeLeave } });
+	await page.goto('/words/saved');
+	await filters(page).getByRole('button', { name: '안 봄 1' }).click();
+	await expect(rows(page)).toHaveCount(1);
+	await expect(rows(page).first()).toContainText('take leave');
 });
 
 test('marks the key senses in bold', async ({ page }) => {
@@ -183,7 +185,7 @@ test('says so when the device has no English voice', async ({ page }) => {
 test('turns the card button off when every word of the Day is 완벽', async ({ page }) => {
 	await page.goto('/words/w1d1');
 	await expect(cardButton(page)).toBeEnabled();
-	await expect(cardButton(page)).toHaveText('카드로 외우기 · 외울 단어 43개');
+	await expect(cardButton(page)).toHaveText('카드로 외우기 · 외울 단어 50개');
 
 	const entries = Object.fromEntries(
 		Array.from({ length: 50 }, (_, index) => [`w1d1-${String(index + 1).padStart(2, '0')}`, known])
@@ -216,7 +218,7 @@ test('shows a status changed in another tab without reloading', async ({ page, c
 	await page.goto('/words/w1d1');
 	await other.goto('/words/w1d1');
 	await statusChip(rows(page).first()).click();
-	await expect(statusChip(rows(other).first())).toHaveAccessibleName('상태 완벽, 눌러서 바꾸기');
+	await expect(statusChip(rows(other).first())).toHaveAccessibleName('상태 애매, 눌러서 바꾸기');
 });
 
 test('leaves the word record as it is when the workbook saves', async ({ page }) => {

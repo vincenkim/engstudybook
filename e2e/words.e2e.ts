@@ -26,7 +26,7 @@ async function expectOpenWeeks(page: Page, expanded: string[]) {
 	}
 }
 
-test('counts every unique word by its PDF status when there is no record', async ({ page }) => {
+test('counts every unique word as 처음 when there is no record', async ({ page }) => {
 	await page.goto('/words');
 	await expect(page).toHaveTitle('단어장 · 토익 문제집');
 	await expect(page.locator('main')).toHaveCount(1);
@@ -35,14 +35,14 @@ test('counts every unique word by its PDF status when there is no record', async
 
 	const overall = page.getByRole('region', { name: '전체 단어 상태' });
 	await expect(overall.getByRole('img')).toHaveAccessibleName(
-		'처음 248개, 애매 603개, 완벽 147개, 안 봄 2개'
+		'처음 1000개, 애매 0개, 완벽 0개, 안 봄 0개'
 	);
 	// Each status names itself in words next to its icon, not by color alone.
 	await expect(overall.getByRole('listitem')).toHaveText([
-		'처음 248',
-		'애매 603',
-		'완벽 147',
-		'안 봄 2'
+		'처음 1000',
+		'애매 0',
+		'완벽 0',
+		'안 봄 0'
 	]);
 	await expect(overall.getByRole('listitem').locator('svg')).toHaveCount(4);
 });
@@ -51,10 +51,10 @@ test('opens the Week of the Day to study and goes to its word list', async ({ pa
 	await page.goto('/words');
 	await expectOpenWeeks(page, ['true', 'false', 'false', 'false']);
 	await expect(page.getByRole('link', { name: /^Day \d/ })).toHaveCount(5);
-	await expect(week(page, 1)).toContainText('5일 · 250단어 · 외울 단어 228');
-	await expect(dayRow(page, 1)).toContainText('50단어 · 외울 단어 43');
+	await expect(week(page, 1)).toContainText('5일 · 250단어 · 외울 단어 250');
+	await expect(dayRow(page, 1)).toContainText('50단어 · 외울 단어 50');
 	await expect(dayRow(page, 1).getByRole('img')).toHaveAccessibleName(
-		'처음 25개, 애매 18개, 완벽 7개, 안 봄 0개'
+		'처음 50개, 애매 0개, 완벽 0개, 안 봄 0개'
 	);
 
 	await dayRow(page, 1).click();

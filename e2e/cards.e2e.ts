@@ -203,13 +203,13 @@ test('closes the cards with the back button and keeps the ratings given', async 
 	await page.goto('/words/w1d1');
 	await cardButton(page).click();
 	await rate(page, '완벽');
-	await expect(counter(page)).toHaveText('2 / 43');
+	await expect(counter(page)).toHaveText('2 / 50');
 
 	await page.goBack();
 	await expect(heading(page)).toHaveText('Week 1 · Day 1');
 	await expect(page).toHaveURL(/\/words\/w1d1$/);
 	await expect(firstChip(page)).toHaveAccessibleName('상태 완벽, 눌러서 바꾸기');
-	await expect(cardButton(page)).toHaveText('카드로 외우기 · 외울 단어 42개');
+	await expect(cardButton(page)).toHaveText('카드로 외우기 · 외울 단어 49개');
 });
 
 test('closes the cards from the header without leaving a card entry behind', async ({
@@ -266,7 +266,7 @@ test('reads the word aloud and stops speaking when the card changes or closes', 
 
 	const before = (await speech()).cancels;
 	await rate(page, '애매');
-	await expect(counter(page)).toHaveText('2 / 43');
+	await expect(counter(page)).toHaveText('2 / 50');
 	const afterRating = (await speech()).cancels;
 	expect(afterRating).toBeGreaterThan(before);
 

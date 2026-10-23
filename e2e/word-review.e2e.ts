@@ -201,16 +201,14 @@ test('opens the cards of the word Day for today, then offers the next Day', asyn
 	const words = page.getByRole('region', { name: '오늘의 단어' });
 	await expect(words).toContainText('Week 1 · Day 1 · 50단어');
 	await expect(words.getByRole('img')).toHaveAccessibleName(
-		'처음 25개, 애매 18개, 완벽 7개, 안 봄 0개'
+		'처음 50개, 애매 0개, 완벽 0개, 안 봄 0개'
 	);
 	await expect(words.getByRole('link', { name: '목록' })).toHaveAttribute('href', /\/words\/w1d1$/);
-	await expect(page.getByRole('region', { name: '전체 진도' })).toContainText(
-		'완벽 147 / 1,000단어'
-	);
-	await words.getByRole('link', { name: '카드로 외우기 · 43개' }).click();
+	await expect(page.getByRole('region', { name: '전체 진도' })).toContainText('완벽 0 / 1,000단어');
+	await words.getByRole('link', { name: '카드로 외우기 · 50개' }).click();
 	await expect(heading(page)).toHaveText('Week 1 · Day 1 카드');
-	for (let card = 1; card <= 43; card++) {
-		await expect(cardCounter(page)).toHaveText(`${card} / 43`);
+	for (let card = 1; card <= 50; card++) {
+		await expect(cardCounter(page)).toHaveText(`${card} / 50`);
 		await rateCard(page, 2);
 	}
 	await expect(page.getByRole('heading', { name: '이번 세트 끝' })).toBeVisible();

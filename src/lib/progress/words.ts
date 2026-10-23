@@ -39,13 +39,14 @@ export interface StudyItem {
 	star?: boolean;
 }
 
+/** A PDF word starts 처음 until the learner rates it; the PDF's circles are not carried over. */
 export const pdfItem = (word: Word): StudyItem => ({
 	key: recordKey(word),
-	initial: word.initial,
+	initial: 'new',
 	star: word.star === true
 });
 
-/** The app's status wins over the PDF's (R3). */
+/** The app's status wins over the one a word starts with. */
 export const statusOf = (entries: WordEntries, item: StudyItem): WordStatus =>
 	entries[item.key]?.status ?? item.initial;
 

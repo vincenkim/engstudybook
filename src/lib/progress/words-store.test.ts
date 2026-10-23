@@ -77,10 +77,10 @@ describe('word record', () => {
 	});
 
 	it('moves a word to the next status from the list and dates it', () => {
-		expect(beforehand.initial).toBe('unsure');
+		expect(beforehand.initial).toBe('new');
 		setStatusFromList(beforehand);
 		expect(wordsRecord.entries[beforehand.key]).toMatchObject({
-			status: 'known',
+			status: 'unsure',
 			reviewed: '2026-10-23'
 		});
 	});
