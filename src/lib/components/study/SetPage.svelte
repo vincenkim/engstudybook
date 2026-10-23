@@ -132,7 +132,7 @@
 				{/each}
 			{/if}
 			<h3 class="explain-heading">어휘</h3>
-			<VocabChips vocab={page.vocab} />
+			<VocabChips vocab={page.vocab} source={questions[0].id} />
 		</div>
 	{/if}
 {/snippet}

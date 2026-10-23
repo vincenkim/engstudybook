@@ -1,5 +1,5 @@
 import type { PartOfSpeech, Sense, Word, WordStatus } from '#lib/content/words.js';
-import { pdfItem, type StudyItem } from '#lib/progress/words.js';
+import { pdfItem, savedItem, type SavedWord, type StudyItem } from '#lib/progress/words.js';
 
 /**
  * A word as a card shows it, with the study item its ratings are saved under. A PDF word has its
@@ -30,6 +30,21 @@ export const pdfCard = (word: Word): CardWord => ({
 	ipa: word.ipa,
 	lines: word.groups
 });
+
+/** A saved word under its normalized English: its meanings on one line, without a part of speech. */
+export const savedCard = (english: string, saved: SavedWord): CardWord => ({
+	...savedItem(english),
+	word: saved.word,
+	lines: [{ senses: saved.meanings.map((text) => ({ text })) }]
+});
+
+/** What a word reads aloud: without placeholders such as `~`, `A … B`, `-ing` or Korean (KTD14). */
+export const spokenWord = (word: string) =>
+	word
+		.replace(/~|…|\b[AB]\b|-ing\b|[가-힣]+/g, ' ')
+		.replace(/\s+/g, ' ')
+		.replace(/ ([?.!,])/g, '$1')
+		.trim();
 
 export const startSession = (deck: CardWord[]): CardSession => ({
 	cards: [...deck],

@@ -7,6 +7,8 @@ import {
 	pdfCard,
 	progressOf,
 	rateCard,
+	savedCard,
+	spokenWord,
 	startSession,
 	summaryOf,
 	type CardRating,
@@ -77,5 +79,30 @@ describe('card session (KTD10)', () => {
 			ipa: '[əˈdɪʃənl]',
 			lines: [{ pos: '형', senses: [{ text: '추가의' }, { text: '부가의' }] }]
 		});
+	});
+
+	it('shows a saved word without IPA, its meanings on one line', () => {
+		const saved = { word: 'Take Leave', meanings: ['휴가를 내다', '휴가를 가다'], sources: [] };
+		expect(savedCard('take leave', saved)).toEqual({
+			key: 'saved:take leave',
+			initial: 'unseen',
+			word: 'Take Leave',
+			lines: [{ senses: [{ text: '휴가를 내다' }, { text: '휴가를 가다' }] }]
+		});
+	});
+});
+
+describe('spoken word (KTD14)', () => {
+	it.each([
+		['keep ~ clean', 'keep clean'],
+		['Would you like me to ~?', 'Would you like me to?'],
+		['not only A but also B', 'not only but also'],
+		['give A a hand', 'give a hand'],
+		['A … B', ''],
+		['spend 시간 -ing', 'spend'],
+		['City Hall', 'City Hall'],
+		['additional', 'additional']
+	])('reads %s as %s', (word, spoken) => {
+		expect(spokenWord(word)).toBe(spoken);
 	});
 });

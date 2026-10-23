@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { wordStatuses } from '#lib/content/word-schema.js';
-import { recordKey, type Word, type WordStatus } from '#lib/content/words.js';
+import { recordKey, wordDays, wordsOf, type Word, type WordStatus } from '#lib/content/words.js';
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
@@ -29,6 +29,8 @@ export const savedWordSchema = z.object({
 export type WordEntry = z.infer<typeof wordEntrySchema>;
 export type WordEntries = Record<string, WordEntry>;
 export type SavedWord = z.infer<typeof savedWordSchema>;
+/** Saved words by their normalized English. */
+export type SavedWords = Record<string, SavedWord>;
 
 /** A word as the study rules see it: its record key, its status before any rating, its star. */
 export interface StudyItem {
@@ -137,4 +139,65 @@ export function todayWordDay(
 	if (next) return next.key;
 	const left = (day: { items: StudyItem[] }) => deckOf(entries, day.items).length;
 	return days.reduce((best, day) => (left(day) > left(best) ? day : best)).key;
+}
+
+/** A saved word goes by its English in lowercase with single spaces: 'Take Leave' is 'take leave'. */
+export const normalizeEnglish = (english: string) =>
+	english.trim().replace(/\s+/g, ' ').toLowerCase();
+
+/** The PDF rows of each normalized English with their Week and Day; a repeated word has two. */
+const pdfRows = new Map<string, { word: Word; week: number; day: number }[]>();
+for (const { key, week, day } of wordDays) {
+	for (const word of wordsOf(key)) {
+		const english = normalizeEnglish(word.word);
+		pdfRows.set(english, [...(pdfRows.get(english) ?? []), { word, week, day }]);
+	}
+}
+
+/** The Weeks and Days of the PDF that have a saved word too. */
+export const pdfDaysOf = (english: string) =>
+	(pdfRows.get(english) ?? []).map(({ week, day }) => ({ week, day }));
+
+/**
+ * A saved word studies under the record of the PDF word with the same English, so the two never
+ * come up twice (KTD14); a word the PDF lacks has its own, starting 안 봄.
+ */
+export function savedItem(english: string): StudyItem {
+	const pdf = pdfRows.get(english)?.[0];
+	return pdf ? pdfItem(pdf.word) : { key: `saved:${english}`, initial: 'unseen' };
+}
+
+/** Adds a meaning and its question to a saved word, keeping the spelling saved first. */
+export function withMeaning(
+	saved: SavedWord | undefined,
+	word: string,
+	meaning: string,
+	source: string
+): SavedWord {
+	if (!saved) return { word, meanings: [meaning], sources: [source] };
+	const add = (list: string[], item: string) => (list.includes(item) ? list : [...list, item]);
+	return { ...saved, meanings: add(saved.meanings, meaning), sources: add(saved.sources, source) };
+}
+
+/** Takes a meaning and its question back off a saved word; null once no meaning is left. */
+export function withoutMeaning(saved: SavedWord, meaning: string, source: string) {
+	const meanings = saved.meanings.filter((item) => item !== meaning);
+	if (!meanings.length) return null;
+	return { ...saved, meanings, sources: saved.sources.filter((item) => item !== source) };
+}
+
+/**
+ * A vocabulary chip (R15): 'off' until its meaning is saved; 'on' while the word was never rated,
+ * so pressing it again takes the meaning back; 'kept' once rated anywhere its record is shared,
+ * when only the saved list removes it.
+ */
+export function vocabChip(
+	saved: SavedWords,
+	entries: WordEntries,
+	english: string,
+	meaning: string
+): 'off' | 'on' | 'kept' {
+	const key = normalizeEnglish(english);
+	if (!saved[key]?.meanings.includes(meaning)) return 'off';
+	return entries[savedItem(key).key]?.reviewed ? 'kept' : 'on';
 }

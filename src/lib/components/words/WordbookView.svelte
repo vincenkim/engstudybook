@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Bookmark, ChevronRight } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
-	import type { ResolvedPathname } from '$app/types';
 	import { wordDays, wordsOf } from '#lib/content/words.js';
 	import { countStatuses, pdfItem, todayWordDay } from '#lib/progress/words.js';
 	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
@@ -25,9 +24,6 @@
 	// The Week of today's Day starts open; after that each Week keeps the learner's choice (KTD8).
 	const current = todayWordDay(wordsRecord.entries, wordsRecord.lastDay, days);
 	const open = $state(weeks.map((week) => week.days.some(({ key }) => key === current)));
-
-	// resolve() takes only routes that exist, and the saved words page is not one yet.
-	const savedHref = `${resolve('/words')}/saved` as ResolvedPathname;
 </script>
 
 <main class="mx-auto w-full max-w-[760px] px-4 pt-6 pb-12">
@@ -59,7 +55,7 @@
 	<div class="mt-3 grid gap-3">
 		{#if savedCount > 0}
 			<a
-				href={savedHref}
+				href={resolve('/words/saved')}
 				class="flex min-h-14 items-center gap-3 rounded-2xl border bg-card p-4 hover:bg-background"
 			>
 				<Bookmark aria-hidden="true" class="size-5 shrink-0 text-primary" />

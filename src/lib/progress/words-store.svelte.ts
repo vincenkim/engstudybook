@@ -5,10 +5,13 @@ import type { WordStatus } from '#lib/content/words.js';
 import {
 	localDate,
 	nextStatus,
+	normalizeEnglish,
 	rated,
 	savedWordSchema,
 	starOf,
 	statusOf,
+	withMeaning,
+	withoutMeaning,
 	wordEntrySchema,
 	withStatus,
 	type StudyItem
@@ -118,6 +121,28 @@ export function setStatusFromList(item: StudyItem) {
 export function toggleStar(item: StudyItem) {
 	const star = !starOf(wordsRecord.entries, item);
 	wordsRecord.entries[item.key] = { ...wordsRecord.entries[item.key], star };
+	save();
+}
+
+/** A vocabulary chip saves its meaning, under the word saved already when the English is (KTD14). */
+export function saveVocab(english: string, meaning: string, source: string) {
+	const key = normalizeEnglish(english);
+	wordsRecord.saved[key] = withMeaning(wordsRecord.saved[key], english, meaning, source);
+	save();
+}
+
+/** Pressed again before any rating, a chip takes its meaning back; the last one takes the word (R15). */
+export function unsaveVocab(english: string, meaning: string, source: string) {
+	const key = normalizeEnglish(english);
+	const left = withoutMeaning(wordsRecord.saved[key], meaning, source);
+	if (left) wordsRecord.saved[key] = left;
+	else delete wordsRecord.saved[key];
+	save();
+}
+
+/** The saved list removes the saved word only; the record it studies under stays (R15). */
+export function removeSaved(english: string) {
+	delete wordsRecord.saved[english];
 	save();
 }
 

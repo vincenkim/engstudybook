@@ -44,6 +44,7 @@
 		currentCard,
 		progressOf,
 		rateCard,
+		spokenWord,
 		startSession,
 		summaryOf,
 		type CardRating,
@@ -203,7 +204,7 @@
 			{flipped}
 			status={statusOf(wordsRecord.entries, card)}
 			onFlip={flip}
-			onSpeak={() => speak(card.word)}
+			onSpeak={() => speak(spokenWord(card.word))}
 			bind:frontButton
 			bind:backArea
 		/>

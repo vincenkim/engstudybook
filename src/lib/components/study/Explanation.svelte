@@ -16,6 +16,6 @@
 	<Rich tag="p" text={question.why} />
 	{#if question.vocab}
 		<h3 class="explain-heading">어휘</h3>
-		<VocabChips vocab={question.vocab} />
+		<VocabChips vocab={question.vocab} source={question.id} />
 	{/if}
 </div>

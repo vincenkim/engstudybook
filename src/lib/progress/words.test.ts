@@ -8,11 +8,17 @@ import {
 	dueOn,
 	localDate,
 	nextStatus,
+	normalizeEnglish,
+	pdfDaysOf,
 	pdfItem,
 	rated,
+	savedItem,
 	starOf,
 	statusOf,
 	todayWordDay,
+	vocabChip,
+	withMeaning,
+	withoutMeaning,
 	withStatus,
 	type StudyItem,
 	type WordEntries
@@ -172,5 +178,72 @@ describe('today’s word day', () => {
 
 	it('passes over a day opened last that the wordbook does not have', () => {
 		expect(todayWordDay({}, 'w9d9', days)).toBe('w1d1');
+	});
+});
+
+describe('saved words (KTD14)', () => {
+	const delay = pdfItem(wordsOf('w3d2').find((word) => word.word === 'delay')!);
+
+	it('keys a saved word by its English in lowercase with single spaces', () => {
+		expect(normalizeEnglish('  Take   Leave ')).toBe('take leave');
+		expect(normalizeEnglish('take leave')).toBe(normalizeEnglish('Take Leave'));
+	});
+
+	it('keeps the first spelling and gathers new meanings and questions in save order', () => {
+		const first = withMeaning(undefined, 'How long', '얼마나 오래', 'd05-01');
+		const again = withMeaning(first, 'how long', '얼마 동안', 'd07-02');
+		expect(again).toEqual({
+			word: 'How long',
+			meanings: ['얼마나 오래', '얼마 동안'],
+			sources: ['d05-01', 'd07-02']
+		});
+		expect(withMeaning(again, 'how long', '얼마나 오래', 'd05-01')).toEqual(again);
+	});
+
+	it('takes a meaning back off, and the word with its last one', () => {
+		const one = withMeaning(undefined, 'delay', '연기하다', 'd01-01');
+		const both = withMeaning(one, 'delay', '지연', 'd11-13');
+		expect(withoutMeaning(both, '연기하다', 'd01-01')).toEqual({
+			word: 'delay',
+			meanings: ['지연'],
+			sources: ['d11-13']
+		});
+		expect(withoutMeaning(one, '연기하다', 'd01-01')).toBeNull();
+	});
+
+	it('studies a word the PDF has under the PDF word’s record, so it comes up once (AE7)', () => {
+		expect(savedItem('delay')).toEqual(delay);
+		expect(pdfDaysOf('delay')).toEqual([{ week: 3, day: 2 }]);
+		const entries = { [savedItem('delay').key]: rated(undefined, 'known', '2026-10-01') };
+		expect(statusOf(entries, delay)).toBe('known');
+		expect(dueItems(entries, [delay, savedItem('delay')], today)).toEqual([delay]);
+	});
+
+	it('gives a word the PDF lacks its own record, 안 봄 until rated', () => {
+		expect(savedItem('take leave')).toEqual({ key: 'saved:take leave', initial: 'unseen' });
+		expect(pdfDaysOf('take leave')).toEqual([]);
+		const entries = { 'saved:take leave': rated(undefined, 'new', today) };
+		expect(statusOf(entries, delay)).toBe(delay.initial);
+	});
+
+	it('names both Days of a repeated word and shares the record of its rows', () => {
+		expect(pdfDaysOf('temporary')).toEqual([
+			{ week: 3, day: 2 },
+			{ week: 3, day: 3 }
+		]);
+		const [later] = wordsOf('w3d3').filter((word) => word.word === 'temporary');
+		expect(savedItem('temporary').key).toBe(recordKey(later));
+	});
+
+	it('lets the chip take its meaning back until the word is rated, then not (R15)', () => {
+		const saved = { delay: withMeaning(undefined, 'delay', '지연', 'd11-13') };
+		expect(vocabChip({}, {}, 'delay', '지연')).toBe('off');
+		expect(vocabChip(saved, {}, 'Delay', '지연')).toBe('on');
+		expect(vocabChip(saved, {}, 'delay', '연기하다')).toBe('off');
+		// A star alone is no rating.
+		expect(vocabChip(saved, { [delay.key]: { star: true } }, 'delay', '지연')).toBe('on');
+		// Rated on the PDF list, which shares the record: kept from the start.
+		const ratedDelay = { [delay.key]: rated(undefined, 'new', today) };
+		expect(vocabChip(saved, ratedDelay, 'delay', '지연')).toBe('kept');
 	});
 });

@@ -1,13 +1,24 @@
 <script lang="ts" module>
+	import type { CardWord } from './card-session';
+
 	/** What a row covers until it is pressed: nothing, the meanings or the word. */
 	export type CoverMode = 'none' | 'meaning' | 'word';
+
+	/** A row of a word list: a PDF word, or a saved word, which has no IPA or parts of speech. */
+	export interface ListWord extends CardWord {
+		/** The PDF word's id, or a saved word's normalized English. */
+		id: string;
+		/** The PDF number, or a saved word's place in its list. */
+		no: number;
+		/** A line under the meanings, such as the PDF Days a saved word is on too. */
+		note?: string;
+	}
 </script>
 
 <script lang="ts">
 	import { Star, Volume2 } from '@lucide/svelte';
 	import { tick } from 'svelte';
-	import type { Word } from '#lib/content/words.js';
-	import { pdfItem, starOf, statusOf } from '#lib/progress/words.js';
+	import { starOf, statusOf } from '#lib/progress/words.js';
 	import { setStatusFromList, toggleStar, wordsRecord } from '#lib/progress/words-store.svelte.js';
 	import StatusChip from './StatusChip.svelte';
 
@@ -16,18 +27,20 @@
 		mode,
 		revealed,
 		onReveal,
-		onSpeak
+		onSpeak,
+		onRemove
 	}: {
-		word: Word;
+		word: ListWord;
 		mode: CoverMode;
 		revealed: boolean;
 		onReveal: () => void;
 		onSpeak: () => void;
+		/** Saved words only: takes the word off its list. */
+		onRemove?: () => void;
 	} = $props();
 
-	const item = $derived(pdfItem(word));
-	const status = $derived(statusOf(wordsRecord.entries, item));
-	const starred = $derived(starOf(wordsRecord.entries, item));
+	const status = $derived(statusOf(wordsRecord.entries, word));
+	const starred = $derived(starOf(wordsRecord.entries, word));
 	const showWord = $derived(mode !== 'word' || revealed);
 	const showMeaning = $derived(mode !== 'meaning' || revealed);
 
@@ -58,7 +71,7 @@
 				class={['flex flex-wrap items-baseline gap-x-2', area]}
 			>
 				<span lang="en" class="text-[17px] font-bold">{word.word}</span>
-				<span class="text-[13px] text-muted-foreground">{word.ipa}</span>
+				{#if word.ipa}<span class="text-[13px] text-muted-foreground">{word.ipa}</span>{/if}
 			</div>
 		{:else}
 			<button type="button" class={cover} onclick={() => reveal(() => wordArea)}>
@@ -67,14 +80,16 @@
 		{/if}
 		{#if showMeaning}
 			<div bind:this={meaningArea} tabindex="-1" class={['mt-1 text-[15px]/[1.6]', area]}>
-				{#each word.groups as group, groupIndex (groupIndex)}
-					{@const last = group.senses.length - 1}
+				{#each word.lines as line, lineIndex (lineIndex)}
+					{@const last = line.senses.length - 1}
 					<p>
-						<span
-							class="mr-1.5 inline-block min-w-[22px] rounded bg-muted px-1 text-center text-xs font-bold text-muted-foreground"
-							>{group.pos}</span
-						>
-						{#each group.senses as sense, index (index)}
+						{#if line.pos}
+							<span
+								class="mr-1.5 inline-block min-w-[22px] rounded bg-muted px-1 text-center text-xs font-bold text-muted-foreground"
+								>{line.pos}</span
+							>
+						{/if}
+						{#each line.senses as sense, index (index)}
 							{#if sense.key}<strong>{sense.text}</strong>{:else}{sense.text}{/if}{index < last
 								? ', '
 								: ''}
@@ -87,16 +102,27 @@
 				<span class="sr-only">{word.no}번</span> 뜻 보기
 			</button>
 		{/if}
+		{#if word.note}<p class="mt-1 text-[13px] text-muted-foreground">{word.note}</p>{/if}
+		{#if onRemove}
+			<button
+				type="button"
+				data-remove
+				class="-ml-2 inline-flex min-h-11 items-center rounded-lg px-2 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground"
+				onclick={onRemove}
+			>
+				<span class="sr-only">{word.no}번</span> 빼기
+			</button>
+		{/if}
 	</div>
 	<div class="flex shrink-0 flex-col items-end">
-		<StatusChip {status} onclick={() => setStatusFromList(item)} />
+		<StatusChip {status} onclick={() => setStatusFromList(word)} />
 		<div class="flex">
 			<button
 				type="button"
 				class={tool}
 				aria-label="{word.no}번 별표"
 				aria-pressed={starred}
-				onclick={() => toggleStar(item)}
+				onclick={() => toggleStar(word)}
 			>
 				<Star aria-hidden="true" class={['size-5', starred && 'fill-primary text-primary']} />
 			</button>

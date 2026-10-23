@@ -2,17 +2,26 @@
 	import { resolve } from '$app/paths';
 	import type { ResolvedPathname } from '$app/types';
 	import { wordDays, wordsOf } from '#lib/content/words.js';
-	import { pdfCard, type CardWord } from '#lib/components/words/card-session.js';
+	import { pdfCard, savedCard, type CardWord } from '#lib/components/words/card-session.js';
 	import { dueItems, type WordEntries } from '#lib/progress/words.js';
+	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
 
 	const pdfCards = wordDays.flatMap(({ key }) => wordsOf(key).map(pdfCard));
 
 	/**
-	 * The words due for review (KTD7), the one list the review tab and today's review card count.
-	 * Saved words (U9) join the PDF words here.
+	 * The words due for review (KTD7), the one list the review tab and today's review card count:
+	 * the PDF words, then the saved words, read from the store. A saved word sharing a PDF word's
+	 * record comes up once, as the PDF word.
 	 */
 	export const reviewWords = (entries: WordEntries, today: string): CardWord[] =>
-		dueItems(entries, pdfCards, today);
+		dueItems(
+			entries,
+			[
+				...pdfCards,
+				...Object.entries(wordsRecord.saved).map(([english, saved]) => savedCard(english, saved))
+			],
+			today
+		);
 
 	/** A review session takes this many of the words due, earliest first (KTD7). */
 	export const reviewDeckSize = 20;
@@ -26,7 +35,7 @@
 	import { Button } from '#lib/components/ui/button/index.js';
 	import StatusChip from '#lib/components/words/StatusChip.svelte';
 	import { statusOf } from '#lib/progress/words.js';
-	import { setStatusFromList, wordsRecord } from '#lib/progress/words-store.svelte.js';
+	import { setStatusFromList } from '#lib/progress/words-store.svelte.js';
 
 	let { words, onCards }: { words: CardWord[]; onCards: () => void } = $props();
 
