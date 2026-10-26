@@ -6,7 +6,9 @@ import {
 	type SavedWords,
 	type WordEntries
 } from '#lib/progress/words.js';
+import type { CardDirection } from '#lib/progress/words-store.svelte.js';
 import { pdfCard, pdfCards, savedCard, type CardWord } from './card-session';
+import { meaningKey, senseKeys, splitMeanings } from './word-meaning';
 
 /** Where a test draws its words from (R2, R6). */
 export type TestRange =
@@ -22,8 +24,13 @@ export type TestCount = (typeof testCounts)[number];
 /** A question of a test and the answers it takes (R14). */
 export interface TestQuestion {
 	card: CardWord;
-	/** Its word, and any word its hint and meanings cannot tell apart, compared as answers are. */
+	/**
+	 * 뜻 → 영어: its word and any word its hint and meanings cannot tell apart. 영어 → 뜻: the keys
+	 * of every meaning its record has. Compared as answers are.
+	 */
 	accepted: string[];
+	/** The meanings a wrong answer shows: 영어 → 뜻 adds the record's other meanings. */
+	lines: CardWord['lines'];
 }
 
 /** `~`, a lone A or B, `-ing`, `one's`, Korean or sentence punctuation: nothing to spell (R4). */
@@ -36,11 +43,16 @@ const weekCards = (week: number) =>
 
 /**
  * The words a range tests, PDF words first and each record once (R6, R7), and how many saved words
- * it left out for their placeholders (R4).
+ * it left out for their placeholders (R4); 영어 → 뜻 shows the English only, so it keeps them all.
  */
-export function testWords(range: TestRange, entries: WordEntries, saved: SavedWords) {
+export function testWords(
+	range: TestRange,
+	entries: WordEntries,
+	saved: SavedWords,
+	direction: CardDirection = 'ko-en'
+) {
 	const savedWords = Object.entries(saved).map(([english, word]) => savedCard(english, word));
-	const kept = savedWords.filter(({ word }) => testable(word));
+	const kept = savedWords.filter(({ word }) => direction === 'en-ko' || testable(word));
 	const starred = (card: CardWord) => starOf(entries, card);
 	switch (range.kind) {
 		case 'all':
@@ -54,7 +66,7 @@ export function testWords(range: TestRange, entries: WordEntries, saved: SavedWo
 		case 'star':
 			return {
 				words: uniqueByKey([...pdfCards, ...kept].filter(starred)),
-				leftOut: savedWords.filter((card) => starred(card) && !testable(card.word)).length
+				leftOut: savedWords.filter((card) => starred(card) && !kept.includes(card)).length
 			};
 	}
 }
@@ -150,14 +162,72 @@ export function newTest(
 	}
 	return shuffled(words, random)
 		.slice(0, count)
-		.map((card) => ({ card, accepted: [...answersOf.get(lookalike(card))!] }));
+		.map((card) => ({ card, accepted: [...answersOf.get(lookalike(card))!], lines: card.lines }));
+}
+
+const meaningKeys = (card: CardWord) =>
+	questionLines(card).flatMap(({ senses }) =>
+		senses.flatMap(({ text }) => splitMeanings(text).flatMap(senseKeys))
+	);
+
+/** The meaning lines of the cards of one record, each sense once. */
+function mergedLines(cards: CardWord[]) {
+	const seen = new Set<string>();
+	return cards
+		.flatMap(({ lines }) => lines)
+		.flatMap((line) => {
+			const senses = line.senses.filter(({ text }) => !seen.has(text) && seen.add(text));
+			return senses.length ? [{ ...line, senses }] : [];
+		});
+}
+
+/**
+ * A new 영어 → 뜻 test (KTD2): a question takes every meaning of its record among `candidates`,
+ * the PDF word's and the saved word's alike (R8).
+ */
+export function newMeaningTest(
+	words: CardWord[],
+	count: number,
+	candidates: CardWord[],
+	random = Math.random
+): TestQuestion[] {
+	const cardsOf = new Map<string, CardWord[]>();
+	for (const card of [...candidates, ...words])
+		cardsOf.set(card.key, [...(cardsOf.get(card.key) ?? []), card]);
+	return shuffled(words, random)
+		.slice(0, count)
+		.map((card) => {
+			const same = cardsOf.get(card.key)!;
+			return { card, accepted: [...new Set(same.flatMap(meaningKeys))], lines: mergedLines(same) };
+		});
+}
+
+/** A meaning answer is right whole, or as a list whose every part is a meaning (R7). */
+function meaningRight(answer: string, accepted: string[]) {
+	if (accepted.includes(meaningKey(answer))) return true;
+	const parts = splitMeanings(answer);
+	return parts.length > 0 && parts.every((part) => accepted.includes(meaningKey(part)));
 }
 
 /** Grades every answer at once; a blank answer is wrong (R12, R14). */
-export function gradeTest(questions: TestQuestion[], answers: string[]) {
-	const wrong = questions.flatMap(({ card, accepted }, index) => {
+export function gradeTest(
+	questions: TestQuestion[],
+	answers: string[],
+	direction: CardDirection = 'ko-en'
+) {
+	const right =
+		direction === 'en-ko'
+			? meaningRight
+			: (answer: string, accepted: string[]) => accepted.includes(answerKey(answer));
+	const wrong = questions.flatMap(({ card, accepted, lines }, index) => {
 		const answer = answers[index] ?? '';
-		return accepted.includes(answerKey(answer)) ? [] : [{ card, answer }];
+		return right(answer, accepted) ? [] : [{ card, answer, lines }];
 	});
 	return { total: questions.length, correct: questions.length - wrong.length, wrong };
+}
+
+/** The score and the words still wrong once the learner marked some answers right (R10). */
+export function withOverrides(result: ReturnType<typeof gradeTest>, marked: ReadonlySet<string>) {
+	const wrong = result.wrong.filter(({ card }) => !marked.has(card.key));
+	return { correct: result.total - wrong.length, wrong };
 }

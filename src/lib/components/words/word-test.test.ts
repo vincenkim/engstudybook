@@ -7,12 +7,14 @@ import {
 	answered,
 	gradeTest,
 	hintOf,
+	newMeaningTest,
 	newTest,
 	questionLines,
 	shuffled,
 	spokenHint,
 	testable,
-	testWords
+	testWords,
+	withOverrides
 } from './word-test';
 
 /** A repeatable stand-in for Math.random. */
@@ -216,5 +218,58 @@ describe('grading (R12, R14)', () => {
 		expect(result.wrong.map(({ card, answer }) => [card.word, answer])).toEqual([
 			['attend', 'atend']
 		]);
+	});
+});
+
+describe('영어 → 뜻 (R7, R8, R10)', () => {
+	const conference = saved('conference', '회의, 학회');
+	const gradeMeaning = (card: CardWord, answer: string, candidates = [card]) =>
+		gradeTest(newMeaningTest([card], 10, candidates), [answer], 'en-ko').correct === 1;
+	const texts = (lines: CardWord['lines']) =>
+		lines.flatMap(({ senses }) => senses.map(({ text }) => text));
+
+	it.each([
+		['학회', true],
+		['회의, 학회', true],
+		[' 회 의 ', true],
+		['회의, 지연', false],
+		['', false],
+		['   ', false]
+	])('grades conference answered %j as %s (AE3)', (answer, correct) =>
+		expect(gradeMeaning(conference, answer)).toBe(correct)
+	);
+
+	it('takes a meaning with its parentheses in or out', () => {
+		expect(gradeMeaning(pdf('warranty'), '보증')).toBe(true);
+		expect(gradeMeaning(pdf('warranty'), '보증서')).toBe(true);
+		expect(gradeMeaning(pdf('draw'), '이목, 관심을 끌다')).toBe(true);
+		expect(gradeMeaning(pdf('finding'), '조사, 연구 결과')).toBe(true);
+		expect(gradeMeaning(saved('let ~ know', '~에게 알리다'), '에게 알리다')).toBe(true);
+	});
+
+	it('takes the saved meanings of a PDF word and shows them on its wrong row (AE3)', () => {
+		const [delay, savedDelay] = [pdf('delay'), saved('delay', '지연시키다')];
+		expect(gradeMeaning(delay, '지연시키다', [delay, savedDelay])).toBe(true);
+		const { wrong } = gradeTest(newMeaningTest([delay], 1, [delay, savedDelay]), [''], 'en-ko');
+		expect(texts(wrong[0].lines)).toEqual(['연기하다', '미루다', '연기', '지연', '지연시키다']);
+	});
+
+	it('keeps saved words with placeholders and leaves none out (AE1)', () => {
+		const record: SavedWords = { 'let ~ know': savedWord('let ~ know', '~에게 알리다') };
+		expect(testWords({ kind: 'saved' }, {}, record, 'en-ko')).toMatchObject({ leftOut: 0 });
+		expect(testWords({ kind: 'saved' }, {}, record, 'en-ko').words).toHaveLength(1);
+		expect(testWords({ kind: 'saved' }, {}, record).words).toHaveLength(0);
+	});
+
+	it('raises the score for the answers marked right', () => {
+		const words = [pdf('additional'), pdf('attend'), pdf('delay')];
+		const answerOf: Record<string, string> = { additional: '추가의', attend: '', delay: '틀림' };
+		const questions = newMeaningTest(words, 10, words);
+		const answers = questions.map(({ card }) => answerOf[card.word]);
+		const result = gradeTest(questions, answers, 'en-ko');
+		expect(result).toMatchObject({ total: 3, correct: 1 });
+		const marked = new Set([result.wrong[0].card.key]);
+		expect(withOverrides(result, marked)).toEqual({ correct: 2, wrong: [result.wrong[1]] });
+		expect(withOverrides(result, new Set())).toEqual({ correct: 1, wrong: result.wrong });
 	});
 });
