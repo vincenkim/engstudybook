@@ -8,6 +8,7 @@
 	import CardSession, { openCards } from '#lib/components/words/CardSession.svelte';
 	import {
 		gradeTest,
+		newMeaningTest,
 		newTest,
 		testWords,
 		type TestQuestion
@@ -19,17 +20,24 @@
 		type TestSetup
 	} from '#lib/components/words/WordTestSetup.svelte';
 	import { pdfDays, todayWordDay } from '#lib/progress/words.js';
-	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
+	import { wordsRecord, type CardDirection } from '#lib/progress/words-store.svelte.js';
 
 	type View =
 		| { kind: 'setup' }
-		| { kind: 'test'; questions: TestQuestion[] }
-		| ({ kind: 'result' } & ReturnType<typeof gradeTest>);
+		| { kind: 'test'; questions: TestQuestion[]; direction: CardDirection }
+		| ({ kind: 'result'; direction: CardDirection } & ReturnType<typeof gradeTest>);
 
 	// Week and Day start on today's word Day (R2).
 	const todayKey = todayWordDay(wordsRecord.entries, wordsRecord.lastDay, pdfDays);
 	const today = pdfDays.find(({ key }) => key === todayKey)!;
-	let setup = $state<TestSetup>({ kind: 'day', week: today.week, day: today.day, count: 20 });
+	// The direction starts on 뜻 → 영어 each time and is not saved (R1).
+	let setup = $state<TestSetup>({
+		direction: 'ko-en',
+		kind: 'day',
+		week: today.week,
+		day: today.day,
+		count: 20
+	});
 	// The test lives on this screen only; leaving it or the page drops it (R13).
 	let view = $state.raw<View>({ kind: 'setup' });
 	let fromCards = $state(false);
@@ -43,15 +51,18 @@
 
 	function startTest() {
 		const { entries, saved } = wordsRecord;
-		// Every word a learner could write, so a question takes the ones it cannot tell apart (R14).
+		const { direction, count } = setup;
+		// Every word a learner could meet: 뜻 → 영어 takes the ones it cannot tell apart (R14), and
+		// 영어 → 뜻 every meaning of the record (R8).
 		const candidates = [
-			...testWords({ kind: 'all' }, entries, saved).words,
-			...testWords({ kind: 'saved' }, entries, saved).words
+			...testWords({ kind: 'all' }, entries, saved, direction).words,
+			...testWords({ kind: 'saved' }, entries, saved, direction).words
 		];
-		const { words } = testWords(rangeOf(setup), entries, saved);
+		const { words } = testWords(rangeOf(setup), entries, saved, direction);
 		// A retake finds the range empty once its cards turned the last stars off: setup says why.
 		if (!words.length) return show({ kind: 'setup' });
-		show({ kind: 'test', questions: newTest(words, setup.count, candidates) });
+		const draw = direction === 'en-ko' ? newMeaningTest : newTest;
+		show({ kind: 'test', questions: draw(words, count, candidates), direction });
 	}
 
 	function openWrongCards() {
@@ -77,11 +88,13 @@
 		backHref={resolve('/words/test')}
 	/>
 {:else if view.kind === 'test'}
-	{@const questions = view.questions}
+	{@const { questions, direction } = view}
 	<WordTestRun
 		{questions}
+		{direction}
 		onExit={() => show({ kind: 'setup' })}
-		onFinish={(answers) => show({ kind: 'result', ...gradeTest(questions, answers) })}
+		onFinish={(answers) =>
+			show({ kind: 'result', direction, ...gradeTest(questions, answers, direction) })}
 	/>
 {:else if view.kind === 'result'}
 	<WordTestResult

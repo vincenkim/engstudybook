@@ -1,8 +1,10 @@
 <script lang="ts" module>
+	import type { CardDirection } from '#lib/progress/words-store.svelte.js';
 	import type { TestCount, TestRange } from './word-test';
 
 	/** What the setup screen chose; Week and Day keep their pick while another range is chosen. */
 	export interface TestSetup {
+		direction: CardDirection;
 		kind: TestRange['kind'];
 		week: number;
 		day: number;
@@ -39,7 +41,14 @@
 		['star', '별표']
 	];
 
-	const pool = $derived(testWords(rangeOf(setup), wordsRecord.entries, wordsRecord.saved));
+	const directions: [CardDirection, string][] = [
+		['ko-en', '뜻 → 영어'],
+		['en-ko', '영어 → 뜻']
+	];
+
+	const pool = $derived(
+		testWords(rangeOf(setup), wordsRecord.entries, wordsRecord.saved, setup.direction)
+	);
 	const size = $derived(Math.min(setup.count, pool.words.length));
 	const leftOutNote = $derived(
 		pool.leftOut ? `~·A/B 같은 표현이 든 ${pool.leftOut}개는 빠져요` : undefined
@@ -68,7 +77,17 @@
 		</a>
 		<h1 class="text-[22px] font-bold">단어시험</h1>
 	</div>
-	<p class="mt-1 text-sm text-muted-foreground">뜻을 보고 영어로 써요. 다 풀고 한 번에 채점해요.</p>
+	<p class="mt-1 text-sm text-muted-foreground">
+		{setup.direction === 'en-ko' ? '영어를 보고 뜻을 써요.' : '뜻을 보고 영어로 써요.'} 다 풀고 한 번에
+		채점해요.
+	</p>
+
+	<SegmentedSetting
+		label="방향"
+		options={directions}
+		value={setup.direction}
+		onChange={(direction) => (setup.direction = direction)}
+	/>
 
 	<fieldset class="mt-5">
 		<legend class="mx-1 mb-2 font-bold">범위</legend>
