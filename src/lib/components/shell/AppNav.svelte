@@ -11,7 +11,7 @@
 			path: '/words',
 			label: '단어장',
 			icon: Copy,
-			routes: ['/words', '/words/[day]', '/words/saved']
+			routes: ['/words', '/words/[day]', '/words/saved', '/words/test']
 		},
 		{ path: '/review', label: '복습', icon: RotateCcw, routes: ['/review'] }
 	] as const;
@@ -20,7 +20,8 @@
 	// Solving a Day, a word list or cards needs the whole phone screen; the rail and sidebar stay
 	// beside it.
 	const studying = $derived(
-		isCurrent(['/day/[day]', '/words/[day]', '/words/saved']) || page.state.cards === true
+		isCurrent(['/day/[day]', '/words/[day]', '/words/saved', '/words/test']) ||
+			page.state.cards === true
 	);
 </script>
 

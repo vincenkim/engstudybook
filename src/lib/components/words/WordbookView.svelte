@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Bookmark, ChevronRight } from '@lucide/svelte';
+	import { Bookmark, ChevronRight, SpellCheck } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import {
 		countStatuses,
@@ -55,6 +55,17 @@
 		</p>
 	</section>
 	<div class="mt-3 grid gap-3">
+		<a
+			href={resolve('/words/test')}
+			class="flex min-h-14 items-center gap-3 rounded-2xl border bg-card p-4 hover:bg-background"
+		>
+			<SpellCheck aria-hidden="true" class="size-5 shrink-0 text-primary" />
+			<span class="flex-1">
+				<span class="block font-bold">단어시험</span>
+				<span class="block text-[13px] text-muted-foreground">뜻을 보고 영어로 써요</span>
+			</span>
+			<ChevronRight aria-hidden="true" class="size-[18px] shrink-0 text-muted-foreground" />
+		</a>
 		{#if savedCount > 0}
 			<a
 				href={resolve('/words/saved')}
