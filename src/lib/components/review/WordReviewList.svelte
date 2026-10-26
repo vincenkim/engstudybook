@@ -1,12 +1,9 @@
 <script lang="ts" module>
 	import { resolve } from '$app/paths';
 	import type { ResolvedPathname } from '$app/types';
-	import { wordDays, wordsOf } from '#lib/content/words.js';
-	import { pdfCard, savedCard, type CardWord } from '#lib/components/words/card-session.js';
+	import { pdfCards, savedCard, type CardWord } from '#lib/components/words/card-session.js';
 	import { dueItems, type WordEntries } from '#lib/progress/words.js';
 	import { wordsRecord } from '#lib/progress/words-store.svelte.js';
-
-	const pdfCards = wordDays.flatMap(({ key }) => wordsOf(key).map(pdfCard));
 
 	/**
 	 * The words due for review (KTD7), the one list the review tab and today's review card count:

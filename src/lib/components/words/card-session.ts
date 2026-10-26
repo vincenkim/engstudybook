@@ -1,4 +1,11 @@
-import type { PartOfSpeech, Sense, Word, WordStatus } from '#lib/content/words.js';
+import {
+	wordDays,
+	wordsOf,
+	type PartOfSpeech,
+	type Sense,
+	type Word,
+	type WordStatus
+} from '#lib/content/words.js';
 import { pdfItem, savedItem, type SavedWord, type StudyItem } from '#lib/progress/words.js';
 
 /**
@@ -30,6 +37,9 @@ export const pdfCard = (word: Word): CardWord => ({
 	ipa: word.ipa,
 	lines: word.groups
 });
+
+/** Every PDF row as a card, a repeated word in both of its Days. */
+export const pdfCards = wordDays.flatMap(({ key }) => wordsOf(key).map(pdfCard));
 
 /** A saved word under its normalized English: its meanings on one line, without a part of speech. */
 export const savedCard = (english: string, saved: SavedWord): CardWord => ({

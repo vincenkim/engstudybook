@@ -104,7 +104,7 @@ export function dueOn(entry: WordEntry | undefined) {
 }
 
 /** Items keeping the first of each record key, so a repeated word counts once. */
-function uniqueByKey<T extends StudyItem>(items: T[]) {
+export function uniqueByKey<T extends StudyItem>(items: T[]) {
 	const seen = new Set<string>();
 	return items.filter(({ key }) => !seen.has(key) && seen.add(key));
 }
