@@ -3,23 +3,36 @@
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { Button } from '#lib/components/ui/button/index.js';
+	import type { CardDirection } from '#lib/progress/words-store.svelte.js';
 	import type { CardWord } from './card-session';
+	import { answered } from './word-test';
 	import WordLines from './WordLines.svelte';
 
 	let {
+		direction,
 		total,
 		correct,
 		wrong,
+		left,
+		marked,
 		fromCards,
+		onMark,
 		onCards,
 		onRetry,
 		onChange
 	}: {
+		direction: CardDirection;
 		total: number;
+		/** Right answers, with the ones the learner marked right (R10). */
 		correct: number;
-		wrong: { card: CardWord; answer: string }[];
+		/** Every wrong answer, marked or not, so a mark can be taken back. */
+		wrong: { card: CardWord; answer: string; lines: CardWord['lines'] }[];
+		/** Wrong answers not marked right. */
+		left: number;
+		marked: ReadonlySet<string>;
 		/** Back from the wrong-word cards, focus returns to the button that opened them (KTD10). */
 		fromCards: boolean;
+		onMark: (key: string) => void;
 		onCards: () => void;
 		onRetry: () => void;
 		onChange: () => void;
@@ -46,11 +59,14 @@
 	</div>
 
 	<section class="mt-3 rounded-2xl border bg-card p-5 text-center">
-		<p class="text-[44px] font-bold text-ok">{correct} / {total}</p>
-		<p class="text-sm text-muted-foreground">
-			{wrong.length ? `${wrong.length}개 틀렸어요` : '모두 맞혔어요'}
-		</p>
-		{#if wrong.length}
+		<!-- Read again when a mark changes the score (R12). -->
+		<div role="status">
+			<p class="text-[44px] font-bold text-ok">{correct} / {total}</p>
+			<p class="text-sm text-muted-foreground">
+				{left ? `${left}개 틀렸어요` : '모두 맞혔어요'}
+			</p>
+		</div>
+		{#if left}
 			<Button
 				bind:ref={cardsButton}
 				size="touch"
@@ -69,17 +85,44 @@
 	{#if wrong.length}
 		<h2 id="{id}-wrong" class="mx-1 mt-6 mb-2 font-bold">틀린 단어</h2>
 		<ul aria-labelledby="{id}-wrong" class="overflow-hidden rounded-2xl border bg-card">
-			{#each wrong as { card, answer }, index (index)}
+			{#each wrong as { card, answer, lines }, index (index)}
 				<li class="border-t px-4 py-3.5 first:border-t-0">
-					<p>
-						<span class="text-sm font-bold text-ok">정답</span>
-						<span lang="en" class="text-lg font-bold">{card.word}</span>
-					</p>
-					<p class="text-sm">
-						<span class="font-bold text-bad">내 답</span>
-						{#if answer.trim()}<span lang="en">{answer}</span>{:else}(쓰지 않음){/if}
-					</p>
-					<div class="mt-1 text-[15px]/[1.6]"><WordLines lines={card.lines} size="sm" /></div>
+					{#if direction === 'en-ko'}
+						{@const on = marked.has(card.key)}
+						<div class="flex items-start justify-between gap-3">
+							<div class="min-w-0">
+								<p id="{id}-word-{index}" lang="en" class="text-lg font-bold">{card.word}</p>
+								<p class="text-sm">
+									<span class="font-bold text-bad">내 답</span>
+									{answered(answer) ? answer : '(쓰지 않음)'}
+									{#if on}<span class="font-bold text-ok">· 맞음으로 침</span>{/if}
+								</p>
+							</div>
+							{#if answered(answer)}
+								<Button
+									size="touch"
+									variant={on ? 'default' : 'outline'}
+									class="min-h-11 shrink-0"
+									aria-pressed={on}
+									aria-describedby="{id}-word-{index}"
+									onclick={() => onMark(card.key)}
+								>
+									맞은 걸로
+								</Button>
+							{/if}
+						</div>
+						<p class="mt-1 text-sm font-bold text-ok">정답</p>
+					{:else}
+						<p>
+							<span class="text-sm font-bold text-ok">정답</span>
+							<span lang="en" class="text-lg font-bold">{card.word}</span>
+						</p>
+						<p class="text-sm">
+							<span class="font-bold text-bad">내 답</span>
+							{#if answer.trim()}<span lang="en">{answer}</span>{:else}(쓰지 않음){/if}
+						</p>
+					{/if}
+					<div class="mt-1 text-[15px]/[1.6]"><WordLines {lines} size="sm" /></div>
 				</li>
 			{/each}
 		</ul>

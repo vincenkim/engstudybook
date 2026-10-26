@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	import { replaceState } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
@@ -11,6 +12,7 @@
 		newMeaningTest,
 		newTest,
 		testWords,
+		withOverrides,
 		type TestQuestion
 	} from '#lib/components/words/word-test.js';
 	import WordTestResult from '#lib/components/words/WordTestResult.svelte';
@@ -41,10 +43,14 @@
 	// The test lives on this screen only; leaving it or the page drops it (R13).
 	let view = $state.raw<View>({ kind: 'setup' });
 	let fromCards = $state(false);
+	// The answers marked right live here, not in the result, which the cards take off screen (KTD7).
+	const marked = new SvelteSet<string>();
+	const scored = $derived(view.kind === 'result' ? withOverrides(view, marked) : undefined);
 
 	function show(next: View) {
 		view = next;
 		fromCards = false;
+		marked.clear();
 		scrollContentToTop();
 		if (next.kind !== 'test') void focusMainHeading();
 	}
@@ -80,9 +86,9 @@
 
 <svelte:head><title>단어시험 · 토익 문제집</title></svelte:head>
 
-{#if page.state.cards && view.kind === 'result' && fromCards}
+{#if page.state.cards && view.kind === 'result' && scored && fromCards}
 	<CardSession
-		deck={view.wrong.map(({ card }) => card)}
+		deck={scored.wrong.map(({ card }) => card)}
 		title="틀린 단어 카드"
 		backLabel="결과로"
 		backHref={resolve('/words/test')}
@@ -96,12 +102,16 @@
 		onFinish={(answers) =>
 			show({ kind: 'result', direction, ...gradeTest(questions, answers, direction) })}
 	/>
-{:else if view.kind === 'result'}
+{:else if view.kind === 'result' && scored}
 	<WordTestResult
+		direction={view.direction}
 		total={view.total}
-		correct={view.correct}
+		correct={scored.correct}
 		wrong={view.wrong}
+		left={scored.wrong.length}
+		{marked}
 		{fromCards}
+		onMark={(key) => (marked.has(key) ? marked.delete(key) : marked.add(key))}
 		onCards={openWrongCards}
 		onRetry={startTest}
 		onChange={() => show({ kind: 'setup' })}

@@ -168,3 +168,68 @@ test('keeps the direction for a retake and a range change (R1)', async ({ page }
 	await page.getByRole('button', { name: '나가기' }).click();
 	await expect(chip(page, '방향', '영어 → 뜻')).toHaveAttribute('aria-checked', 'true');
 });
+
+const wrongRow = (page: Page, english: string) =>
+	page.getByRole('list', { name: '틀린 단어' }).getByRole('listitem').filter({ hasText: english });
+const markButton = (page: Page, english: string) =>
+	wrongRow(page, english).getByRole('button', { name: '맞은 걸로' });
+const cardsButton = (page: Page) => page.getByRole('button', { name: '카드로 다시 보기' });
+const readWords = (page: Page) => page.evaluate(() => localStorage.getItem('toeicBasic.words'));
+
+/** Takes a 영어 → 뜻 test of the saved words, answering each with what `respond` gives. */
+async function takeTest(page: Page, respond: Record<string, string>) {
+	await startSaved(page);
+	for (let question = 1; question <= 3; question++) {
+		await answer(page).fill(respond[await englishOf(page)]);
+		if (question < 3) await answer(page).press('Enter');
+	}
+	await gradeButton(page).click();
+	await expect(heading(page)).toHaveText('시험 결과');
+}
+
+test('marks a wrong answer right, which the cards and the score keep (AE4)', async ({ page }) => {
+	await takeTest(page, { conference: '학회', delivery: '택배', 'let ~ know': '' });
+	const before = await readWords(page);
+	await expect(page.getByText('1 / 3')).toBeVisible();
+	await expect(wrongRow(page, 'delivery')).toContainText('내 답 택배');
+	await expect(wrongRow(page, 'delivery')).toContainText('배송(품)');
+	await expect(wrongRow(page, 'let ~ know')).toContainText('(쓰지 않음)');
+	await expect(markButton(page, 'let ~ know')).toHaveCount(0);
+
+	await markButton(page, 'delivery').click();
+	await expect(markButton(page, 'delivery')).toHaveAttribute('aria-pressed', 'true');
+	await expect(wrongRow(page, 'delivery')).toContainText('맞음으로 침');
+	await expect(page.getByText('2 / 3')).toBeVisible();
+
+	await cardsButton(page).click();
+	await expect(page.getByRole('banner').getByRole('status')).toHaveText('1 / 1');
+	await page.getByRole('link', { name: '그만하고 결과로' }).click();
+	await expect(page.getByText('2 / 3')).toBeVisible();
+	await expect(markButton(page, 'delivery')).toHaveAttribute('aria-pressed', 'true');
+	expect(await readWords(page)).toBe(before);
+
+	// A retake starts with nothing marked.
+	await page.getByRole('button', { name: '같은 범위로 다시' }).click();
+	for (let question = 1; question <= 3; question++) {
+		await answer(page).fill(
+			{ conference: '학회', delivery: '택배', 'let ~ know': '' }[await englishOf(page)]!
+		);
+		if (question < 3) await answer(page).press('Enter');
+	}
+	await gradeButton(page).click();
+	await expect(markButton(page, 'delivery')).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('says every answer is right once each wrong one is marked (AE5)', async ({ page }) => {
+	await takeTest(page, { conference: '회합', delivery: '택배', 'let ~ know': '에게 알리다' });
+	await markButton(page, 'conference').click();
+	await markButton(page, 'delivery').click();
+	await expect(page.getByText('3 / 3')).toBeVisible();
+	await expect(page.getByText('모두 맞혔어요')).toBeVisible();
+	await expect(cardsButton(page)).toHaveCount(0);
+	await expect(markButton(page, 'delivery')).toBeFocused();
+
+	await markButton(page, 'delivery').click();
+	await expect(page.getByText('2 / 3')).toBeVisible();
+	await expect(cardsButton(page)).toBeVisible();
+});
