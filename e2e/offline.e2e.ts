@@ -52,6 +52,7 @@ test('fits a phone screen without sideways scrolling', async ({ page }) => {
 		'/words',
 		'/words/w1d1',
 		'/words/saved',
+		'/words/test',
 		// Last, so its session opens next.
 		'/review'
 	]) {
@@ -69,6 +70,15 @@ test('fits a phone screen without sideways scrolling', async ({ page }) => {
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('틀린 문제 다시 풀기');
 	await expect(page.getByText(/^Part 7 · 독해/)).toBeVisible();
 	await expectNoSidewaysScroll(page);
+
+	// A word test of the saved word: its question, then its result.
+	await page.goto('/words/test');
+	await page.getByRole('radio', { name: '담은 단어', exact: true }).check();
+	await page.getByRole('button', { name: '1문제로 시작' }).click();
+	await expectNoSidewaysScroll(page);
+	await page.getByRole('button', { name: '채점하기' }).click();
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('시험 결과');
+	await expectNoSidewaysScroll(page);
 });
 
 test('works offline after the first visit', async ({ page, context }) => {
@@ -82,6 +92,8 @@ test('works offline after the first visit', async ({ page, context }) => {
 		['/review', '복습'],
 		['/words', '단어장'],
 		['/words/w1d1', 'Week 1 · Day 1'],
+		['/words/test', '단어시험'],
+		// Last, so its cards open next.
 		['/words/saved', '담은 단어']
 	]) {
 		await page.goto(path);
@@ -95,6 +107,13 @@ test('works offline after the first visit', async ({ page, context }) => {
 		.getByRole('button', { name: /^완벽/ })
 		.click();
 	await expect(page.getByText('단어 1개를 봤어요')).toBeVisible();
+	// A word test of the saved word, graded with no network.
+	await page.goto('/words/test');
+	await page.getByRole('radio', { name: '담은 단어', exact: true }).check();
+	await page.getByRole('button', { name: '1문제로 시작' }).click();
+	await page.getByRole('textbox').fill('take leave');
+	await page.getByRole('button', { name: '채점하기' }).click();
+	await expect(page.getByText('1 / 1')).toBeVisible();
 	await page.goto('/review');
 	await expect(page.getByText('Day 31')).toBeVisible();
 });
