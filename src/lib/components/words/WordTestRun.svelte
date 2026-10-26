@@ -28,8 +28,7 @@
 	// Chrome's Korean IME sends the Enter that ends a composition twice: while composing, then plain,
 	// before the key comes up. An Android keyboard ends composing a word and sends one plain Enter.
 	let composingEnter = false;
-	// 영어 → 뜻 moves on as Enter comes up: composing has ended then and the last syllable is in. A
-	// Korean IME may report the Enter that ends composing as 'Process' (KTD5).
+	// 영어 → 뜻 moves on as Enter comes up: composing has ended then and the last syllable is in (KTD5).
 	let enterDown = false;
 	const meaningTest = $derived(direction === 'en-ko');
 
@@ -53,9 +52,13 @@
 
 	const next = () => (last ? gradeButton?.focus() : move(1));
 
+	// A Korean IME may report the Enter that ends composing as 'Process'; `code` still names the key.
+	const isEnter = (event: KeyboardEvent) =>
+		event.key === 'Enter' || event.code === 'Enter' || event.code === 'NumpadEnter';
+
 	function keydown(event: KeyboardEvent) {
 		if (meaningTest) {
-			if (event.key !== 'Enter') enterDown = event.keyCode === 229;
+			if (!isEnter(event)) enterDown = false;
 			else if (!event.repeat) enterDown = true;
 			return;
 		}
@@ -72,7 +75,9 @@
 
 	function keyup(event: KeyboardEvent) {
 		composingEnter = false;
-		const pressed = enterDown && event.key === 'Enter';
+		// The last syllable's key may come up after Enter goes down; only Enter coming up counts.
+		if (!isEnter(event)) return;
+		const pressed = enterDown;
 		enterDown = false;
 		if (meaningTest && pressed) next();
 	}

@@ -259,6 +259,9 @@ describe('영어 → 뜻 (R7, R8, R10)', () => {
 		expect(testWords({ kind: 'saved' }, {}, record, 'en-ko')).toMatchObject({ leftOut: 0 });
 		expect(testWords({ kind: 'saved' }, {}, record, 'en-ko').words).toHaveLength(1);
 		expect(testWords({ kind: 'saved' }, {}, record).words).toHaveLength(0);
+		const starred: WordEntries = { 'saved:let ~ know': { star: true } };
+		expect(testWords({ kind: 'star' }, starred, record, 'en-ko')).toMatchObject({ leftOut: 0 });
+		expect(testWords({ kind: 'star' }, starred, record, 'en-ko').words).toHaveLength(9);
 	});
 
 	it('raises the score for the answers marked right', () => {

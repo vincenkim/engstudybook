@@ -121,6 +121,10 @@ test('shows the English, its IPA and part of speech, and reads it aloud', async 
 	const { cancels } = await speech();
 	await page.getByRole('button', { name: '다음', exact: true }).click();
 	expect((await speech()).cancels).toBeGreaterThan(cancels);
+	// So does leaving the test.
+	const { cancels: moved } = await speech();
+	await page.getByRole('button', { name: '나가기' }).click();
+	await expect.poll(async () => (await speech()).cancels).toBeGreaterThan(moved);
 });
 
 test('moves on once per Enter, as the key comes up with the last syllable in (AE2)', async ({
@@ -153,6 +157,22 @@ test('moves on once per Enter, as the key comes up with the last syllable in (AE
 	await page.getByRole('button', { name: '이전' }).click();
 	await page.getByRole('button', { name: '이전' }).click();
 	await expect(answer(page)).toHaveValue(meanings[first]);
+});
+
+test('moves on once though another key comes up while Enter is down', async ({ page }) => {
+	await startSaved(page);
+	// Windows' Korean IME reports keys as 'Process'; the last syllable's key comes up after Enter.
+	await key(page, 'keydown', { key: 'Process', code: 'KeyK', keyCode: 229 });
+	await key(page, 'keydown', { key: 'Process', code: 'Enter', keyCode: 229 });
+	await key(page, 'keyup', { key: 'ㅏ', code: 'KeyK', keyCode: 75 });
+	await expect(counter(page)).toContainText('1 / 3');
+	await key(page, 'keyup');
+	await expect(counter(page)).toContainText('2 / 3');
+
+	// Enter on 다음 moves once, though the key comes up in the answer box.
+	await page.getByRole('button', { name: '다음', exact: true }).press('Enter');
+	await expect(counter(page)).toContainText('3 / 3');
+	await expect(answer(page)).toBeFocused();
 });
 
 test('keeps the direction for a retake and a range change (R1)', async ({ page }) => {
