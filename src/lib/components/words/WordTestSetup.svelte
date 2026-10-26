@@ -41,7 +41,7 @@
 
 	const pool = $derived(testWords(rangeOf(setup), wordsRecord.entries, wordsRecord.saved));
 	const size = $derived(Math.min(setup.count, pool.words.length));
-	const leftOut = $derived(
+	const leftOutNote = $derived(
 		pool.leftOut ? `~·A/B 같은 표현이 든 ${pool.leftOut}개는 빠져요` : undefined
 	);
 	const empty = $derived.by(() => {
@@ -109,8 +109,8 @@
 				</div>
 			{/each}
 		</div>
-		{#if leftOut && size}
-			<p class="mx-1 mt-2 text-[13px] text-muted-foreground">{leftOut}</p>
+		{#if leftOutNote && size}
+			<p class="mx-1 mt-2 text-[13px] text-muted-foreground">{leftOutNote}</p>
 		{/if}
 	</fieldset>
 

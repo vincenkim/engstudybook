@@ -27,13 +27,9 @@
 		| ({ kind: 'result' } & ReturnType<typeof gradeTest>);
 
 	// Week and Day start on today's word Day (R2).
-	const today = todayWordDay(wordsRecord.entries, wordsRecord.lastDay, pdfDays);
-	let setup = $state<TestSetup>({
-		kind: 'day',
-		week: Number(today[1]),
-		day: Number(today[3]),
-		count: 20
-	});
+	const todayKey = todayWordDay(wordsRecord.entries, wordsRecord.lastDay, pdfDays);
+	const today = pdfDays.find(({ key }) => key === todayKey)!;
+	let setup = $state<TestSetup>({ kind: 'day', week: today.week, day: today.day, count: 20 });
 	// The test lives on this screen only; leaving it or the page drops it (R13).
 	let view = $state.raw<View>({ kind: 'setup' });
 	let fromCards = $state(false);
@@ -78,11 +74,11 @@
 		backHref={resolve('/words/test')}
 	/>
 {:else if view.kind === 'test'}
+	{@const questions = view.questions}
 	<WordTestRun
-		questions={view.questions}
+		{questions}
 		onExit={() => show({ kind: 'setup' })}
-		onFinish={(answers) =>
-			view.kind === 'test' && show({ kind: 'result', ...gradeTest(view.questions, answers) })}
+		onFinish={(answers) => show({ kind: 'result', ...gradeTest(questions, answers) })}
 	/>
 {:else if view.kind === 'result'}
 	<WordTestResult

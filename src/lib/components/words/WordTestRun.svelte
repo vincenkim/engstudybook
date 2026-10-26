@@ -27,8 +27,7 @@
 	const lines = $derived(questionLines(card));
 	const meaning = $derived(
 		lines
-			.map(({ pos, senses }) => [pos, senses.map(({ text }) => text).join(', ')])
-			.flat()
+			.flatMap(({ pos, senses }) => [pos, senses.map(({ text }) => text).join(', ')])
 			.filter(Boolean)
 			.join(' ')
 	);
