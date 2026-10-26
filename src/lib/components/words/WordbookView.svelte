@@ -62,7 +62,7 @@
 			<SpellCheck aria-hidden="true" class="size-5 shrink-0 text-primary" />
 			<span class="flex-1">
 				<span class="block font-bold">단어시험</span>
-				<span class="block text-[13px] text-muted-foreground">뜻을 보고 영어로 써요</span>
+				<span class="block text-[13px] text-muted-foreground">뜻과 영어를 서로 맞혀요</span>
 			</span>
 			<ChevronRight aria-hidden="true" class="size-[18px] shrink-0 text-muted-foreground" />
 		</a>
