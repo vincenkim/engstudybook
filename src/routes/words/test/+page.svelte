@@ -108,7 +108,7 @@
 		total={view.total}
 		correct={scored.correct}
 		wrong={view.wrong}
-		left={scored.wrong.length}
+		stillWrong={scored.wrong.length}
 		{marked}
 		{fromCards}
 		onMark={(key) => (marked.has(key) ? marked.delete(key) : marked.add(key))}

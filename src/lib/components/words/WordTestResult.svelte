@@ -13,7 +13,7 @@
 		total,
 		correct,
 		wrong,
-		left,
+		stillWrong,
 		marked,
 		fromCards,
 		onMark,
@@ -27,8 +27,7 @@
 		correct: number;
 		/** Every wrong answer, marked or not, so a mark can be taken back. */
 		wrong: { card: CardWord; answer: string; lines: CardWord['lines'] }[];
-		/** Wrong answers not marked right. */
-		left: number;
+		stillWrong: number;
 		marked: ReadonlySet<string>;
 		/** Back from the wrong-word cards, focus returns to the button that opened them (KTD10). */
 		fromCards: boolean;
@@ -63,10 +62,10 @@
 		<div role="status">
 			<p class="text-[44px] font-bold text-ok">{correct} / {total}</p>
 			<p class="text-sm text-muted-foreground">
-				{left ? `${left}개 틀렸어요` : '모두 맞혔어요'}
+				{stillWrong ? `${stillWrong}개 틀렸어요` : '모두 맞혔어요'}
 			</p>
 		</div>
-		{#if left}
+		{#if stillWrong}
 			<Button
 				bind:ref={cardsButton}
 				size="touch"
@@ -88,22 +87,22 @@
 			{#each wrong as { card, answer, lines }, index (index)}
 				<li class="border-t px-4 py-3.5 first:border-t-0">
 					{#if direction === 'en-ko'}
-						{@const on = marked.has(card.key)}
+						{@const isMarked = marked.has(card.key)}
 						<div class="flex items-start justify-between gap-3">
 							<div class="min-w-0">
 								<p id="{id}-word-{index}" lang="en" class="text-lg font-bold">{card.word}</p>
 								<p class="text-sm">
 									<span class="font-bold text-bad">내 답</span>
 									{answered(answer) ? answer : '(쓰지 않음)'}
-									{#if on}<span class="font-bold text-ok">· 맞음으로 침</span>{/if}
+									{#if isMarked}<span class="font-bold text-ok">· 맞음으로 침</span>{/if}
 								</p>
 							</div>
 							{#if answered(answer)}
 								<Button
 									size="touch"
-									variant={on ? 'default' : 'outline'}
+									variant={isMarked ? 'default' : 'outline'}
 									class="min-h-11 shrink-0"
-									aria-pressed={on}
+									aria-pressed={isMarked}
 									aria-describedby="{id}-word-{index}"
 									onclick={() => onMark(card.key)}
 								>
