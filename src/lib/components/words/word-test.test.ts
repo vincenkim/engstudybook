@@ -93,6 +93,15 @@ describe('drawing a test (R7)', () => {
 		const { words } = testWords({ kind: 'star' }, { [desirable.key]: { star: false } }, {});
 		expect(words).toHaveLength(7);
 	});
+
+	it('counts the starred saved words it left out for their placeholders (R4)', () => {
+		const record: SavedWords = { 'let ~ know': savedWord('let ~ know', '~에게 알리다') };
+		const entries: WordEntries = { 'saved:let ~ know': { star: true } };
+		const { words, leftOut } = testWords({ kind: 'star' }, entries, record);
+		expect(words).toHaveLength(8);
+		expect(leftOut).toBe(1);
+		expect(testWords({ kind: 'star' }, {}, record).leftOut).toBe(0);
+	});
 });
 
 describe('saved words with placeholders (R4)', () => {

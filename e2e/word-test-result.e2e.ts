@@ -108,6 +108,37 @@ test('opens setup, not stale cards, when back reaches the test again (AE7)', asy
 	await expect(heading(page)).toHaveText('시험 결과');
 });
 
+test('keeps closed cards closed when forward reaches their entry again', async ({ page }) => {
+	await takeTest(page, () => '');
+	await cardsButton(page).click();
+	await page.getByRole('link', { name: '그만하고 결과로' }).click();
+	await page.getByRole('button', { name: '같은 범위로 다시' }).click();
+	await page.goForward();
+	await expect(answer(page)).toBeVisible();
+	for (let question = 1; question < 3; question++)
+		await page.getByRole('button', { name: '다음', exact: true }).click();
+	await gradeButton(page).click();
+	await expect(heading(page)).toHaveText('시험 결과');
+});
+
+test('goes back to setup when the range empties before a retake', async ({ page }) => {
+	await takeTest(page, () => '');
+	// Another tab removes the saved words.
+	await page.evaluate(() => {
+		localStorage.setItem(
+			'toeicBasic.words',
+			JSON.stringify({ version: 1, entries: {}, saved: {} })
+		);
+		window.dispatchEvent(new StorageEvent('storage', { key: 'toeicBasic.words' }));
+	});
+	await page.getByRole('button', { name: '같은 범위로 다시' }).click();
+	await expect(heading(page)).toHaveText('단어시험');
+	await expect(page.getByRole('button', { name: '시작' })).toBeDisabled();
+	await expect(page.getByRole('button', { name: '시작' })).toHaveAccessibleDescription(
+		'담은 단어가 없어요'
+	);
+});
+
 test('praises a perfect score and retakes the test or changes the range', async ({ page }) => {
 	await takeTest(page, (word) => word.toUpperCase());
 	await expect(page.getByText('3 / 3')).toBeVisible();

@@ -153,19 +153,32 @@ test('asks for the English of each meaning and keeps the answers while moving', 
 	await expect(counter(page)).toContainText('2 / 3');
 });
 
-test('moves on once for an Enter that ends a Korean composition (AE5)', async ({ page }) => {
+test('moves on once for each Enter, whatever the keyboard sends with it (AE5)', async ({
+	page
+}) => {
+	const keyUp = () =>
+		answer(page).evaluate((input) =>
+			input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }))
+		);
 	await startSaved(page);
+	// Held down, Enter repeats; the repeats must not run on through the questions into grading.
+	await pressEnter(page, { repeat: true });
+	await expect(counter(page)).toContainText('1 / 3');
+	// Chrome's Korean IME: the Enter that ends a composition, then the same Enter once more.
 	await pressEnter(page, { isComposing: true, keyCode: 229 });
+	await pressEnter(page, {});
+	await expect(counter(page)).toContainText('1 / 3');
+	await keyUp();
+	await pressEnter(page, {});
+	await expect(counter(page)).toContainText('2 / 3');
+	await keyUp();
+
+	// An Android keyboard: it ends the composition of the word, then sends one plain Enter.
 	await answer(page).evaluate((input) =>
 		input.dispatchEvent(new CompositionEvent('compositionend'))
 	);
 	await pressEnter(page, {});
-	await expect(counter(page)).toContainText('1 / 3');
-	await answer(page).evaluate((input) =>
-		input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }))
-	);
-	await pressEnter(page, {});
-	await expect(counter(page)).toContainText('2 / 3');
+	await expect(counter(page)).toContainText('3 / 3');
 });
 
 test('grades only from the button and says how many answers are blank', async ({ page }) => {

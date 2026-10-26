@@ -49,6 +49,8 @@
 			...testWords({ kind: 'saved' }, entries, saved).words
 		];
 		const { words } = testWords(rangeOf(setup), entries, saved);
+		// A retake finds the range empty once its cards turned the last stars off: setup says why.
+		if (!words.length) return show({ kind: 'setup' });
 		show({ kind: 'test', questions: newTest(words, setup.count, candidates) });
 	}
 
@@ -58,7 +60,8 @@
 	}
 
 	// Back from another screen restores the cards flag on a fresh page with no result to show;
-	// left in place, the next grading would open cards nobody asked for (KTD6).
+	// left in place, the next grading would open cards nobody asked for (KTD6). Forward restores it
+	// on this page too, so only cards this result opened are shown.
 	onMount(() => {
 		if (page.state.cards) replaceState('', {});
 	});
@@ -66,7 +69,7 @@
 
 <svelte:head><title>단어시험 · 토익 문제집</title></svelte:head>
 
-{#if page.state.cards && view.kind === 'result'}
+{#if page.state.cards && view.kind === 'result' && fromCards}
 	<CardSession
 		deck={view.wrong.map(({ card }) => card)}
 		title="틀린 단어 카드"

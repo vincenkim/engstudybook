@@ -20,8 +20,9 @@
 	let index = $state(0);
 	let input: HTMLInputElement;
 	let gradeButton = $state<HTMLButtonElement | null>(null);
-	// A Korean IME sends the Enter that ends a composition once more, until the key comes up (KTD5).
-	let composed = false;
+	// Chrome's Korean IME sends the Enter that ends a composition twice: while composing, then plain,
+	// before the key comes up. An Android keyboard ends composing a word and sends one plain Enter.
+	let composingEnter = false;
 
 	const card = $derived(questions[index].card);
 	const lines = $derived(questionLines(card));
@@ -41,7 +42,13 @@
 	}
 
 	function keydown(event: KeyboardEvent) {
-		if (event.key !== 'Enter' || event.isComposing || event.keyCode === 229 || composed) return;
+		// A held Enter repeats; the repeats must not run on through the questions into grading.
+		if (event.key !== 'Enter' || event.repeat) return;
+		if (event.isComposing || event.keyCode === 229) {
+			composingEnter = true;
+			return;
+		}
+		if (composingEnter) return;
 		event.preventDefault();
 		if (last) gradeButton?.focus();
 		else move(1);
@@ -91,8 +98,7 @@
 			aria-describedby="{id}-hint"
 			class="mt-3 h-12 w-full rounded-xl border-[1.5px] bg-background px-3 text-lg outline-none focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-ring/50"
 			onkeydown={keydown}
-			oncompositionend={() => (composed = true)}
-			onkeyup={() => (composed = false)}
+			onkeyup={() => (composingEnter = false)}
 		/>
 		<div class="mt-3 grid grid-cols-2 gap-2">
 			<Button
