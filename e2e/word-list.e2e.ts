@@ -91,6 +91,18 @@ test('moves a status on from its chip, keeps focus there and saves it', async ({
 	await expect(chip).toHaveAccessibleName('상태 애매, 눌러서 바꾸기');
 });
 
+test('shows the last word test result apart from the status', async ({ page }) => {
+	await seedWords(page, {
+		entries: { 'w1d1-01': { tested: 'pass' }, 'w1d1-02': { ...known, tested: 'fail' } }
+	});
+	await page.goto('/words/w1d1');
+	await expect(rows(page).nth(0)).toContainText('단어시험 합격');
+	await expect(statusChip(rows(page).nth(0))).toHaveAccessibleName('상태 처음, 눌러서 바꾸기');
+	await expect(rows(page).nth(1)).toContainText('단어시험 불합격');
+	await expect(statusChip(rows(page).nth(1))).toHaveAccessibleName('상태 완벽, 눌러서 바꾸기');
+	await expect(rows(page).nth(2)).not.toContainText('단어시험');
+});
+
 test('keeps the rows of a filter while their status changes', async ({ page }) => {
 	await page.goto('/words/w1d1');
 	await expect(filters(page).getByRole('button')).toHaveText([

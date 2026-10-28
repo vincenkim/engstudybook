@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	import { Star, Volume2 } from '@lucide/svelte';
+	import { BadgeCheck, BadgeX, Star, Volume2 } from '@lucide/svelte';
 	import { tick } from 'svelte';
 	import { starOf, statusOf } from '#lib/progress/words.js';
 	import { setStatusFromList, toggleStar, wordsRecord } from '#lib/progress/words-store.svelte.js';
@@ -42,6 +42,7 @@
 
 	const status = $derived(statusOf(wordsRecord.entries, word));
 	const starred = $derived(starOf(wordsRecord.entries, word));
+	const tested = $derived(wordsRecord.entries[word.key]?.tested);
 	const showWord = $derived(mode !== 'word' || revealed);
 	const showMeaning = $derived(mode !== 'meaning' || revealed);
 
@@ -102,6 +103,22 @@
 	</div>
 	<div class="flex shrink-0 flex-col items-end">
 		<StatusChip {status} onclick={() => setStatusFromList(word)} />
+		{#if tested}
+			<p
+				class={[
+					'inline-flex items-center gap-1 px-2.5 text-[13px] font-bold whitespace-nowrap',
+					tested === 'pass' ? 'text-ok' : 'text-bad'
+				]}
+			>
+				{#if tested === 'pass'}
+					<BadgeCheck aria-hidden="true" class="size-3.5" />
+				{:else}
+					<BadgeX aria-hidden="true" class="size-3.5" />
+				{/if}
+				<span class="sr-only">단어시험</span>
+				{tested === 'pass' ? '합격' : '불합격'}
+			</p>
+		{/if}
 		<div class="flex">
 			<button
 				type="button"

@@ -22,7 +22,11 @@
 		type TestSetup
 	} from '#lib/components/words/WordTestSetup.svelte';
 	import { pdfDays, todayWordDay } from '#lib/progress/words.js';
-	import { wordsRecord, type CardDirection } from '#lib/progress/words-store.svelte.js';
+	import {
+		recordTestResults,
+		wordsRecord,
+		type CardDirection
+	} from '#lib/progress/words-store.svelte.js';
 
 	type View =
 		| { kind: 'setup' }
@@ -71,6 +75,22 @@
 		show({ kind: 'test', questions: draw(words, count, candidates), direction });
 	}
 
+	// Each word keeps its last result for the word list; a mark changes it again (R1, R2).
+	function grade(questions: TestQuestion[], answers: string[], direction: CardDirection) {
+		const result = gradeTest(questions, answers, direction);
+		const wrong = new Set(result.wrong.map(({ card }) => card.key));
+		recordTestResults(
+			questions.map(({ card }) => ({ key: card.key, passed: !wrong.has(card.key) }))
+		);
+		show({ kind: 'result', direction, ...result });
+	}
+
+	function mark(key: string) {
+		if (marked.has(key)) marked.delete(key);
+		else marked.add(key);
+		recordTestResults([{ key, passed: marked.has(key) }]);
+	}
+
 	function openWrongCards() {
 		fromCards = true;
 		openCards();
@@ -99,8 +119,7 @@
 		{questions}
 		{direction}
 		onExit={() => show({ kind: 'setup' })}
-		onFinish={(answers) =>
-			show({ kind: 'result', direction, ...gradeTest(questions, answers, direction) })}
+		onFinish={(answers) => grade(questions, answers, direction)}
 	/>
 {:else if view.kind === 'result' && scored}
 	<WordTestResult
@@ -111,7 +130,7 @@
 		stillWrong={scored.wrong.length}
 		{marked}
 		{fromCards}
-		onMark={(key) => (marked.has(key) ? marked.delete(key) : marked.add(key))}
+		onMark={mark}
 		onCards={openWrongCards}
 		onRetry={startTest}
 		onChange={() => show({ kind: 'setup' })}

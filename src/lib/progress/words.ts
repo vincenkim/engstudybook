@@ -6,14 +6,19 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
 /**
  * What the app recorded for a word, kept only for words touched: the status and date of the last
- * rating, the 완벽 ratings in a row, and the star when it was toggled (KTD5).
+ * rating, the 완벽 ratings in a row, the star when it was toggled (KTD5), and the last word test.
  */
 export const wordEntrySchema = z.object({
 	status: z.enum(wordStatuses).optional(),
 	/** Local date (YYYY-MM-DD) of the last rating. */
 	reviewed: isoDate.optional(),
 	streak: z.number().int().min(0).optional(),
-	star: z.boolean().optional()
+	star: z.boolean().optional(),
+	/**
+	 * The last word test's result, either direction, apart from the status and schedule. A bad value
+	 * drops alone: the entry would otherwise go with it, status and star included.
+	 */
+	tested: z.enum(['pass', 'fail']).optional().catch(undefined)
 });
 
 /** A word saved from a question's vocabulary (KTD14). */

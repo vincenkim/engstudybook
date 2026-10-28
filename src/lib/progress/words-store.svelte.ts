@@ -125,6 +125,14 @@ export function toggleStar(item: StudyItem) {
 	save();
 }
 
+/** A graded word test keeps each word's result by record key; its status and schedule stay. */
+export function recordTestResults(results: { key: string; passed: boolean }[]) {
+	for (const { key, passed } of results) {
+		wordsRecord.entries[key] = { ...wordsRecord.entries[key], tested: passed ? 'pass' : 'fail' };
+	}
+	save();
+}
+
 /** A vocabulary chip saves its meaning, under the word saved already when the English is (KTD14). */
 export function saveVocab(english: string, meaning: string, source: string) {
 	const key = normalizeEnglish(english);

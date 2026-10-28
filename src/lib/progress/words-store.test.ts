@@ -13,6 +13,7 @@ import {
 	defaultWordsRecord,
 	parseWordsRecord,
 	rateWord,
+	recordTestResults,
 	removeSaved,
 	replaceWords,
 	saveVocab,
@@ -38,10 +39,18 @@ const progressBefore: Progress = {
 
 const wordsSaved: WordsRecord = {
 	version: 1,
-	entries: { 'w1d1-05': { status: 'new', reviewed: '2026-10-20', streak: 0, star: true } },
+	entries: {
+		'w1d1-05': { status: 'new', reviewed: '2026-10-20', streak: 0, star: true, tested: 'pass' }
+	},
 	saved: { 'take leave': { word: 'take leave', meanings: ['휴가를 내다'], sources: ['d03-12'] } },
 	lastDay: 'w1d2',
 	direction: 'ko-en'
+};
+
+/** A record saved before word tests kept their results. */
+const wordsBeforeTests: WordsRecord = {
+	...wordsSaved,
+	entries: { 'w1d1-05': { status: 'new', reviewed: '2026-10-20', streak: 0, star: true } }
 };
 
 beforeEach(() => {
@@ -60,6 +69,20 @@ describe('word record', () => {
 			saved: { ...wordsSaved.saved, broken: { word: '' } }
 		});
 		expect(parsed).toEqual(wordsSaved);
+	});
+
+	it('reads a record saved before word tests as it is, with no results', () => {
+		const parsed = parseWordsRecord(structuredClone(wordsBeforeTests))!;
+		expect(parsed).toEqual(wordsBeforeTests);
+		expect(parsed.entries['w1d1-05']).not.toHaveProperty('tested');
+	});
+
+	it('drops only a malformed test result and keeps the word’s status and star', () => {
+		const parsed = parseWordsRecord({
+			...wordsBeforeTests,
+			entries: { 'w1d1-05': { ...wordsBeforeTests.entries['w1d1-05'], tested: 'maybe' } }
+		});
+		expect(parsed).toEqual(wordsBeforeTests);
 	});
 
 	it('reads a record of another version as unusable', () => {
@@ -91,6 +114,25 @@ describe('word record', () => {
 		toggleStar(desirable);
 		expect(wordsRecord.entries[desirable.key]).toEqual({ star: true });
 	});
+
+	it('keeps the last test result of each word apart from its status and schedule', () => {
+		rateWord(beforehand, 'unsure');
+		recordTestResults([
+			{ key: beforehand.key, passed: true },
+			{ key: desirable.key, passed: false }
+		]);
+		expect(wordsRecord.entries[beforehand.key]).toEqual({
+			status: 'unsure',
+			reviewed: '2026-10-23',
+			streak: 0,
+			tested: 'pass'
+		});
+		expect(wordsRecord.entries[desirable.key]).toEqual({ tested: 'fail' });
+
+		recordTestResults([{ key: desirable.key, passed: true }]);
+		rateWord(desirable, 'new');
+		expect(wordsRecord.entries[desirable.key]).toMatchObject({ status: 'new', tested: 'pass' });
+	});
 });
 
 describe('backup', () => {
@@ -110,6 +152,15 @@ describe('backup', () => {
 		expect(progress.settings.theme).toBe('dark');
 		expect(progress.days).toEqual(progressBefore.days);
 		expect(wordsRecord).toEqual(wordsSaved);
+	});
+
+	it('restores the words of a backup made before word tests, with no results', async () => {
+		replaceWords(structuredClone(wordsSaved));
+		restoreBackup(
+			(await readProgressFile(fileOf({ ...progressBefore, words: wordsBeforeTests })))!
+		);
+		expect(wordsRecord).toEqual(wordsBeforeTests);
+		expect(wordsRecord.entries['w1d1-05']).not.toHaveProperty('tested');
 	});
 
 	it('keeps the words and theme when a backup made before the wordbook comes in (AE5)', async () => {

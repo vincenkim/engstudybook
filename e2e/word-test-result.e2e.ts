@@ -51,10 +51,6 @@ async function takeTest(page: Page, respond: (word: string) => string) {
 }
 
 test('shows the score and each wrong word with the answer given', async ({ page }) => {
-	const before = await (async () => {
-		await seedWords(page, { saved: threeWords });
-		return readWords(page);
-	})();
 	await takeTest(page, (word) => (word === 'delay' ? 'dellay' : word === 'refund' ? '' : word));
 	await expect(page.getByText('1 / 3')).toBeVisible();
 	await expect(wrongRows(page)).toHaveCount(2);
@@ -62,7 +58,20 @@ test('shows the score and each wrong word with the answer given', async ({ page 
 	await expect(delay).toContainText('내 답 dellay');
 	await expect(delay).toContainText('지연');
 	await expect(wrongRows(page).filter({ hasText: 'refund' })).toContainText('내 답 (쓰지 않음)');
-	expect(await readWords(page)).toBe(before);
+});
+
+test('keeps each word’s result for the word list, leaving its status alone', async ({ page }) => {
+	await takeTest(page, (word) => (word === 'delay' ? 'dellay' : word));
+	const entries = Object.values(JSON.parse((await readWords(page))!).entries);
+	expect(entries).toHaveLength(3);
+	for (const entry of entries) expect(entry).not.toHaveProperty('status');
+
+	await page.goto('/words/saved');
+	const row = (english: string) =>
+		page.getByRole('main').getByRole('listitem').filter({ hasText: english });
+	await expect(row('delay')).toContainText('단어시험 불합격');
+	await expect(row('take leave')).toContainText('단어시험 합격');
+	await expect(row('refund')).toContainText('단어시험 합격');
 });
 
 test('reviews the wrong words as cards and comes back to the same result (AE6)', async ({
@@ -80,8 +89,10 @@ test('reviews the wrong words as cards and comes back to the same result (AE6)',
 	await expect(heading(page)).toHaveText('시험 결과');
 	await expect(page.getByText('1 / 3')).toBeVisible();
 	await expect(cardsButton(page)).toBeFocused();
-	const entries = JSON.parse((await readWords(page))!).entries;
-	expect(Object.values(entries)).toEqual([expect.objectContaining({ status: 'known' })]);
+	const entries: Record<string, object> = JSON.parse((await readWords(page))!).entries;
+	expect(Object.values(entries).filter((entry) => 'status' in entry)).toEqual([
+		expect.objectContaining({ status: 'known' })
+	]);
 });
 
 test('opens setup, not stale cards, when back reaches the test again (AE7)', async ({

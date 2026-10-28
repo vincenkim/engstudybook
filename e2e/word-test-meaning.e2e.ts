@@ -194,7 +194,12 @@ const wrongRow = (page: Page, english: string) =>
 const markButton = (page: Page, english: string) =>
 	wrongRow(page, english).getByRole('button', { name: '맞은 걸로' });
 const cardsButton = (page: Page) => page.getByRole('button', { name: '카드로 다시 보기' });
-const readWords = (page: Page) => page.evaluate(() => localStorage.getItem('toeicBasic.words'));
+/** The saved test result of a word, by its record key. */
+const testedOf = (page: Page, key: string) =>
+	page.evaluate(
+		(key) => JSON.parse(localStorage.getItem('toeicBasic.words')!).entries[key]?.tested,
+		key
+	);
 
 /** Takes a 영어 → 뜻 test of the saved words, answering each with what `respond` gives. */
 async function takeTest(page: Page, respond: Record<string, string>) {
@@ -209,8 +214,8 @@ async function takeTest(page: Page, respond: Record<string, string>) {
 
 test('marks a wrong answer right, which the cards and the score keep (AE4)', async ({ page }) => {
 	await takeTest(page, { conference: '학회', delivery: '택배', 'let ~ know': '' });
-	const before = await readWords(page);
 	await expect(page.getByText('1 / 3')).toBeVisible();
+	expect(await testedOf(page, 'saved:delivery')).toBe('fail');
 	await expect(wrongRow(page, 'delivery')).toContainText('내 답 택배');
 	await expect(wrongRow(page, 'delivery')).toContainText('배송(품)');
 	await expect(wrongRow(page, 'let ~ know')).toContainText('(쓰지 않음)');
@@ -226,7 +231,7 @@ test('marks a wrong answer right, which the cards and the score keep (AE4)', asy
 	await page.getByRole('link', { name: '그만하고 결과로' }).click();
 	await expect(page.getByText('2 / 3')).toBeVisible();
 	await expect(markButton(page, 'delivery')).toHaveAttribute('aria-pressed', 'true');
-	expect(await readWords(page)).toBe(before);
+	expect(await testedOf(page, 'saved:delivery')).toBe('pass');
 
 	// A retake starts with nothing marked.
 	await page.getByRole('button', { name: '같은 범위로 다시' }).click();
@@ -252,4 +257,5 @@ test('says every answer is right once each wrong one is marked (AE5)', async ({ 
 	await markButton(page, 'delivery').click();
 	await expect(page.getByText('2 / 3')).toBeVisible();
 	await expect(cardsButton(page)).toBeVisible();
+	expect(await testedOf(page, 'saved:delivery')).toBe('fail');
 });
